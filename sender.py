@@ -1,5 +1,6 @@
 from constants import EdupageLinks
 from utils import get_current_year
+from utils import get_current_week
 from requests import Response
 from requests import Request
 from requests import post
@@ -44,3 +45,21 @@ def create_main_db_request_json() -> dict:
         ],
         "__gsh": "00000000"
     }
+
+
+def create_current_js__request_json(class_id: str) -> dict:
+    firstday, lastday = get_current_week()
+
+    return {
+        "__args":[
+            None,
+            {
+                "year": get_current_year(),
+                "datefrom": firstday,
+                "dateto": lastday,
+                "table":"classes",
+                "id": class_id,
+                }
+            ],
+        "__gsh":"00000000"
+    }    
