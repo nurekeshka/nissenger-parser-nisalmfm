@@ -46,10 +46,10 @@ def create_main_db_request_json() -> dict:
     }
 
 
-def request_current_js() -> Response:
+def request_current_js(class_id: str) -> Response:
     return post(
         url=urls.current_js_link.value,
-        data=create_current_js_request_json(),
+        data=create_current_js_request_json(class_id),
     )
 
 
