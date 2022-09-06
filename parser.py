@@ -17,13 +17,13 @@ def parse_json_to_dictionary(data: dict) -> dict:
     dataset: dict = dict()
 
     for row in data_rows:
-        try:
+        if len(row) == 2:
             id, value = row.values()
-        except ValueError:
-            values = tuple(row.values())
-            id = values[0]
-            value = values[1 : ]
-
-        dataset[id] = value
+            dataset[id] = value
+        elif len(row) == 3:
+            id, starttime, endtime = row.values()
+            dataset[id] = (starttime, endtime)
+        else:
+            raise ValueError(f'{row=}')
 
     return dataset
