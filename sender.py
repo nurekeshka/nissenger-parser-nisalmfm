@@ -1,14 +1,13 @@
-from constants import EdupageLinks
+from constants import EdupageLinks as urls
 from utils import get_current_year
 from utils import get_current_week
 from requests import Response
-from requests import Request
 from requests import post
 
 
 def request_main_db() -> Response:
     return post(
-        url=EdupageLinks.main_db_link.value,
+        url=urls.main_db_link.value,
         json=create_main_db_request_json()
     )
 
@@ -45,6 +44,13 @@ def create_main_db_request_json() -> dict:
         ],
         "__gsh": "00000000"
     }
+
+
+def request_current_js() -> Response:
+    return post(
+        url=urls.current_js_link.value,
+        data=create_current_js_request_json(),
+    )
 
 
 def create_current_js_request_json(class_id: str) -> dict:
