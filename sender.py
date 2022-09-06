@@ -47,7 +47,7 @@ def create_main_db_request_json() -> dict:
     }
 
 
-def create_current_js__request_json(class_id: str) -> dict:
+def create_current_js_request_json(class_id: str) -> dict:
     firstday, lastday = get_current_week()
 
     return {
