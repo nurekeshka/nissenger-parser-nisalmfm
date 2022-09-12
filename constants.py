@@ -12,3 +12,6 @@ class EdupageMainDbIDs(Enum):
     classrooms = 2
     classes = 3
     periods = 4
+
+
+FIELDS = [ 'teachers', 'subjects', 'classes', 'periods', 'offices' ]
