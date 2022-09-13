@@ -14,4 +14,4 @@ class EdupageMainDbIDs(Enum):
     periods = 4
 
 
-FIELDS = [ 'teachers', 'subjects', 'classes', 'periods', 'offices' ]
+FIELDS = [ 'teachers', 'subjects', 'offices', 'classes', 'periods' ]

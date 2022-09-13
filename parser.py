@@ -27,3 +27,7 @@ def parse_json_to_dictionary(data: dict) -> dict:
             raise ValueError(f'{row=}')
 
     return dataset
+
+
+def parse_class_lessons(data: dict):
+    pass
