@@ -21,6 +21,7 @@ class Indexes(Enum):
     teacherids = 'teacherids'
     classids = 'classids'
     classroomids = 'classroomids'
+    durationperiods = 'durationperiods'
 
     id = 'id'
     data_rows = 'data_rows'
