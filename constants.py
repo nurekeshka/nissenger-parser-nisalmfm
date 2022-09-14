@@ -12,3 +12,18 @@ class Indexes(Enum):
     classrooms = 2
     classes = 3
     periods = 4
+
+    uniperiod = 'uniperiod'
+    starttime = 'starttime'
+    endtime = 'endtime'
+
+    subjectid = 'subjectid'
+    teacherids = 'teacherids'
+    classids = 'classids'
+    classroomids = 'classroomids'
+
+    id = 'id'
+    data_rows = 'data_rows'
+    short = 'short'
+    name = 'name'
+    period = 'period'
