@@ -53,6 +53,7 @@ class Parser(object):
                         payload[indexes.starttime.value], payload[indexes.endtime.value])
         classes = [self.classes[_class]
                    for _class in payload[indexes.classids.value]]
+        duration = payload[indexes.durationperiods.value]
 
         return Lesson(
             subject=subject,
@@ -60,6 +61,7 @@ class Parser(object):
             period=period,
             classroom=classroom,
             classes=classes,
+            duration=duration,
         )
 
     def load_lessons(self):
