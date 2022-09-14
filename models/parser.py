@@ -25,22 +25,25 @@ class Parser(object):
         self.classes: Dict[str, Class] = dict()
 
     def load_database(self):
-        for teacher in self.loader.tables[indexes.teachers.value]['data_rows']:
-            self.teachers[teacher['id']] = Teacher(teacher['short'])
+        for teacher in self.loader.tables[indexes.teachers.value][indexes.data_rows.value]:
+            self.teachers[teacher[indexes.id.value]] = Teacher(
+                teacher[indexes.short.value])
 
-        for period in self.loader.tables[indexes.periods.value]['data_rows']:
-            self.periods[period['id']] = Period(
-                period['period'], period['starttime'], period['endtime'])
+        for period in self.loader.tables[indexes.periods.value][indexes.data_rows.value]:
+            self.periods[period[indexes.id.value]] = Period(
+                period[indexes.period.value], period[indexes.starttime.value], period['endtime'])
 
-        for subject in self.loader.tables[indexes.subjects.value]['data_rows']:
-            self.subjects[subject['id']] = Subject(subject['name'])
+        for subject in self.loader.tables[indexes.subjects.value][indexes.data_rows.value]:
+            self.subjects[subject[indexes.id.value]] = Subject(
+                subject[indexes.name.value])
 
-        for classroom in self.loader.tables[indexes.classrooms.value]['data_rows']:
-            self.classrooms[classroom['id']] = Classroom(
-                classroom['short'])
+        for classroom in self.loader.tables[indexes.classrooms.value][indexes.data_rows.value]:
+            self.classrooms[classroom[indexes.id.value]] = Classroom(
+                classroom[indexes.short.value])
 
-        for _class in self.loader.tables[indexes.classes.value]['data_rows']:
-            self.classes[_class['id']] = Class(_class['short'])
+        for _class in self.loader.tables[indexes.classes.value][indexes.data_rows.value]:
+            self.classes[_class[indexes.id.value]] = Class(
+                _class[indexes.short.value])
 
     def parse_lesson(self, payload) -> Lesson:
         subject = self.subjects[payload[indexes.subjectid.value]]
