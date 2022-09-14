@@ -43,13 +43,13 @@ class Parser(object):
             self.classes[_class['id']] = Class(_class['short'])
 
     def parse_lesson(self, payload) -> Lesson:
-        subject = self.subjects[payload['subjectid']]
-        teacher = self.teachers[payload['teacherids'][0]]
-        classroom = self.classrooms[payload['classroomids'][0]]
-        period = Period(payload['uniperiod'],
-                        payload['starttime'], payload['endtime'])
+        subject = self.subjects[payload[indexes.subjectid.value]]
+        teacher = self.teachers[payload[indexes.teacherids.value][0]]
+        classroom = self.classrooms[payload[indexes.classroomids.value][0]]
+        period = Period(payload[indexes.uniperiod.value],
+                        payload[indexes.starttime.value], payload[indexes.endtime.value])
         classes = [self.classes[_class]
-                   for _class in payload['classids']]
+                   for _class in payload[indexes.classids.value]]
 
         return Lesson(
             subject=subject,
