@@ -75,4 +75,5 @@ class Lesson(object):
             f'{self.classroom}',
             f'{self.teacher}',
             f'{", ".join(map(str, self.classes))}',
+            f'{self.duration}',
         ])
