@@ -7,7 +7,7 @@ from models.entities import Period
 from models.entities import Lesson
 from models.entities import Class
 from models.loader import Loader
-from typing import Dict
+from typing import Dict, List
 from utils import first
 import pandas as pd
 
@@ -25,6 +25,7 @@ class Parser(object):
         self.subjects: Dict[str, Subject] = dict()
         self.periods: Dict[str, Period] = dict()
         self.classes: Dict[str, Class] = dict()
+        self.lessons: List[Lesson] = list()
 
     def load_database(self):
         for teacher in self.loader.tables[indexes.teachers.value][indexes.data_rows.value]:
@@ -74,7 +75,7 @@ class Parser(object):
     def load_lessons(self):
         for class_lessons in self.loader.lessons.values():
             for lesson in class_lessons:
-                entity = self.parse_lesson(lesson)
+                self.lessons.append(self.parse_lesson(lesson))
 
     def export_teachers(self) -> pd.DataFrame:
         return pd.DataFrame(data={
