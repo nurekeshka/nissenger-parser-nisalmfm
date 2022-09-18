@@ -30,6 +30,14 @@ class Indexes(Enum):
     period = 'period'
 
 
+class TableHeaders(Enum):
+    teachers = 'TEACHERS'
+    classes = 'CLASSES'
+    classrooms = 'CLASSROOMS'
+    subjects = 'SUBJECTS'
+    periods = 'PERIODS'
+
+
 TEACHER_CHANGES = {
     '?міртай Э. Т.': 'Әміртай Э. Т.',
     'К': 'Куратор',
