@@ -9,6 +9,8 @@ from models.loader import Loader
 from typing import Tuple
 from typing import Dict
 
+from utils import first
+
 
 class Parser(object):
     def __init__(self, loader: Loader, *args, **kwargs):
@@ -45,15 +47,20 @@ class Parser(object):
             self.classes[_class[indexes.id.value]] = Class(
                 _class[indexes.short.value])
 
-    def parse_lesson(self, payload) -> Lesson:
+    def parse_lesson(self, payload: Dict[str, dict]) -> Lesson:
         subject = self.subjects[payload[indexes.subjectid.value]]
-        teacher = self.teachers[payload[indexes.teacherids.value][0]]
-        classroom = self.classrooms[payload[indexes.classroomids.value][0]]
+        duration = payload.get(indexes.durationperiods.value) if payload.get(
+            indexes.durationperiods.value) else 1
+
+        teacher = self.teachers.get(first(payload[indexes.teacherids.value]))
+        classroom = self.classrooms.get(
+            first(payload[indexes.classroomids.value]))
+
         period = Period(payload[indexes.uniperiod.value],
                         payload[indexes.starttime.value], payload[indexes.endtime.value])
+
         classes = [self.classes[_class]
                    for _class in payload[indexes.classids.value]]
-        duration = payload[indexes.durationperiods.value]
 
         return Lesson(
             subject=subject,
@@ -69,4 +76,4 @@ class Parser(object):
             for lesson in class_lessons:
                 entity = self.parse_lesson(lesson)
                 print(entity)
-                return
+            return
