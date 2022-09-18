@@ -7,7 +7,7 @@ from models.entities import Period
 from models.entities import Lesson
 from models.entities import Class
 from models.loader import Loader
-from typing import Dict, List
+from typing import Dict, List, Set
 from utils import first
 import pandas as pd
 
@@ -26,6 +26,7 @@ class Parser(object):
         self.periods: Dict[str, Period] = dict()
         self.classes: Dict[str, Class] = dict()
         self.lessons: List[Lesson] = list()
+        self.groups: Set[str] = set()
 
     def load_database(self):
         for teacher in self.loader.tables[indexes.teachers.value][indexes.data_rows.value]:
@@ -49,19 +50,14 @@ class Parser(object):
                 _class[indexes.short.value])
 
     def parse_lesson(self, payload: Dict[str, dict]) -> Lesson:
-        subject = self.subjects[payload[indexes.subjectid.value]]
-        duration = payload.get(indexes.durationperiods.value) if payload.get(
-            indexes.durationperiods.value) else 1
+        subject = self._parse_subject(payload)
+        teacher = self._parse_teacher(payload)
+        duration = self._parse_duration(payload)
+        classroom = self._parse_classroom(payload)
+        period = self._parse_period(payload)
+        classes = self._parse_classes(payload)
 
-        teacher = self.teachers.get(first(payload[indexes.teacherids.value]))
-        classroom = self.classrooms.get(
-            first(payload[indexes.classroomids.value]))
-
-        period = Period(payload[indexes.uniperiod.value],
-                        payload[indexes.starttime.value], payload[indexes.endtime.value])
-
-        classes = [self.classes[_class]
-                   for _class in payload[indexes.classids.value]]
+        self.groups.add(", ".join(map(str, classes)))
 
         return Lesson(
             subject=subject,
@@ -71,6 +67,28 @@ class Parser(object):
             classes=classes,
             duration=duration,
         )
+
+    def _parse_teacher(self, payload: Dict[str, dict]) -> Teacher:
+        return self.teachers.get(first(payload[indexes.teacherids.value]))
+
+    def _parse_subject(self, payload: Dict[str, dict]) -> Subject:
+        return self.subjects[payload[indexes.subjectid.value]]
+
+    def _parse_duration(self, payload: Dict[str, dict]) -> int:
+        return payload.get(indexes.durationperiods.value) if payload.get(
+            indexes.durationperiods.value) else 1
+
+    def _parse_classroom(self, payload: Dict[str, dict]) -> Classroom:
+        return self.classrooms.get(
+            first(payload[indexes.classroomids.value]))
+
+    def _parse_period(self, payload: Dict[str, dict]) -> Period:
+        return Period(payload[indexes.uniperiod.value],
+                      payload[indexes.starttime.value], payload[indexes.endtime.value])
+
+    def _parse_classes(self, payload: Dict[str, dict]) -> List[Class]:
+        return [self.classes[_class]
+                for _class in payload[indexes.classids.value]]
 
     def load_lessons(self):
         for class_lessons in self.loader.lessons.values():
