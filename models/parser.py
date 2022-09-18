@@ -1,3 +1,4 @@
+from constants import TableHeaders as headers
 from constants import Indexes as indexes
 from models.entities import Classroom
 from models.entities import Teacher
@@ -77,25 +78,25 @@ class Parser(object):
 
     def export_teachers(self) -> pd.DataFrame:
         return pd.DataFrame(data={
-            'TEACHERS': self.teachers.values(),
+            headers.teachers.value: self.teachers.values(),
         })
 
     def export_subjects(self) -> pd.DataFrame:
         return pd.DataFrame(data={
-            'SUBJECTS': self.subjects.values(),
+            headers.subjects.value: self.subjects.values(),
         })
 
     def export_classrooms(self) -> pd.DataFrame:
         return pd.DataFrame(data={
-            'CLASSROOMS': self.classrooms.values(),
+            headers.classrooms.value: self.classrooms.values(),
         })
 
     def export_periods(self) -> pd.DataFrame:
         return pd.DataFrame(data={
-            'PERIODS': self.periods.values(),
+            headers.periods.value: self.periods.values(),
         })
 
     def export_classes(self) -> pd.DataFrame:
         return pd.DataFrame(data={
-            'CLASSES': self.classes.values(),
+            headers.classes.value: self.classes.values(),
         })
