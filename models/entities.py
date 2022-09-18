@@ -1,20 +1,11 @@
+from constants import CLASSROOM_CHANGES
+from constants import TEACHER_CHANGES
+from constants import SUBJECT_CHANGES
 from typing import Tuple
 
 
-class Teacher(object):
-    changes = {
-        '?міртай Э. Т.': 'Әміртай Э. Т.',
-        'К': 'Куратор',
-        'С?лтан Р. М.': 'Сұлтан Р. М.',
-        'У': 'Учитель',
-        'У?лихан А.': 'Уәлихан А.',
-        'Н?рма?амбет Д.': 'Нұрмағамбет Д.',
-        'АА': 'Химик',
-        'ББ': 'Куратор',
-        'В': 'Физик',
-        'А': 'Асель',
-        'ДТ': 'Биолог',
-    }
+class BaseTimetableEntity(object):
+    changes = dict()
 
     def __init__(self, name: str):
         self.name = name
@@ -23,14 +14,26 @@ class Teacher(object):
     def _parse_name(self):
         if self.name in self.changes:
             self.name = self.changes[self.name]
-        else:
-            self.name = str(self.name).lower().title()
 
     def __str__(self):
         return self.name
 
 
-class Period(object):
+class ParseTitleMixin(object):
+    changes = dict()
+
+    def _parse_name(self):
+        if self.name in self.changes:
+            self.name = self.changes[self.name]
+        else:
+            self.name = str(self.name).lower().title()
+
+
+class Teacher(BaseTimetableEntity, ParseTitleMixin):
+    changes = TEACHER_CHANGES
+
+
+class Period(BaseTimetableEntity):
     def __init__(self, number: int, starttime: str, endtime: str):
         self.number = int(number)
         self.starttime = starttime
@@ -40,23 +43,15 @@ class Period(object):
         return f'{self.starttime} | {self.endtime}'
 
 
-class Subject(object):
-    def __init__(self, name: str):
-        self.name = name
-
-    def __str__(self):
-        return self.name
+class Subject(BaseTimetableEntity):
+    changes = SUBJECT_CHANGES
 
 
-class Classroom(object):
-    def __init__(self, name: str):
-        self.name = name
-
-    def __str__(self):
-        return self.name
+class Classroom(BaseTimetableEntity):
+    changes = CLASSROOM_CHANGES
 
 
-class Class(object):
+class Class(BaseTimetableEntity):
     def __init__(self, name: str):
         self.grade = int(name[:-1])
         self.letter = name[-1]
