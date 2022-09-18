@@ -21,3 +21,7 @@ def current_week() -> Tuple[str]:
     lastday: date = firstday + timedelta(days=6)
 
     return tuple( map( lambda day: day.strftime('%Y-%m-%d'), ( firstday, lastday ) ) )
+
+
+def first(array: list):
+    return array[0] if bool(array) else None
