@@ -6,10 +6,9 @@ from models.entities import Period
 from models.entities import Lesson
 from models.entities import Class
 from models.loader import Loader
-from typing import Tuple
 from typing import Dict
-
 from utils import first
+import pandas as pd
 
 
 class Parser(object):
@@ -75,5 +74,28 @@ class Parser(object):
         for class_lessons in self.loader.lessons.values():
             for lesson in class_lessons:
                 entity = self.parse_lesson(lesson)
-                print(entity)
-            return
+
+    def export_teachers(self) -> pd.DataFrame:
+        return pd.DataFrame(data={
+            'TEACHERS': self.teachers.values(),
+        })
+
+    def export_subjects(self) -> pd.DataFrame:
+        return pd.DataFrame(data={
+            'SUBJECTS': self.subjects.values(),
+        })
+
+    def export_classrooms(self) -> pd.DataFrame:
+        return pd.DataFrame(data={
+            'CLASSROOMS': self.classrooms.values(),
+        })
+
+    def export_periods(self) -> pd.DataFrame:
+        return pd.DataFrame(data={
+            'PERIODS': self.periods.values(),
+        })
+
+    def export_classes(self) -> pd.DataFrame:
+        return pd.DataFrame(data={
+            'CLASSES': self.classes.values(),
+        })
