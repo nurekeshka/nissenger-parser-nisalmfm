@@ -70,11 +70,4 @@ class Lesson(object):
         self.duration = duration
 
     def __str__(self):
-        return '\n'.join([
-            f'{self.subject}',
-            f'{self.period}',
-            f'{self.classroom}',
-            f'{self.teacher}',
-            f'{", ".join(map(str, self.classes))}',
-            f'{self.duration}',
-        ])
+        return f'{self.subject} - {self.teacher}, {self.classroom}: {", ".join(map(str, self.classes))} :: {self.period} x{self.duration}'
