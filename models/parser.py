@@ -12,7 +12,55 @@ from utils import first
 import pandas as pd
 
 
-class Parser(object):
+class BaseParser(object):
+    def __init__(self, loader: Loader, *args, **kwargs):
+        self.loader: Loader = loader
+        self.initialize_dictionaries()
+        self.load_database()
+        self.load_lessons()
+
+    def initialize_dictionaries(self):
+        self.classrooms: Dict[str, Classroom] = dict()
+        self.teachers: Dict[str, Teacher] = dict()
+        self.subjects: Dict[str, Subject] = dict()
+        self.periods: Dict[str, Period] = dict()
+        self.classes: Dict[str, Class] = dict()
+        self.lessons: List[Lesson] = list()
+        self.groups: Set[str] = set()
+
+    def load_database(self):
+        pass
+
+    def load_lessons(self):
+        pass
+
+    def export_teachers(self) -> pd.DataFrame:
+        return pd.DataFrame(data={
+            headers.teachers.value: self.teachers.values(),
+        })
+
+    def export_subjects(self) -> pd.DataFrame:
+        return pd.DataFrame(data={
+            headers.subjects.value: self.subjects.values(),
+        })
+
+    def export_classrooms(self) -> pd.DataFrame:
+        return pd.DataFrame(data={
+            headers.classrooms.value: self.classrooms.values(),
+        })
+
+    def export_periods(self) -> pd.DataFrame:
+        return pd.DataFrame(data={
+            headers.periods.value: self.periods.values(),
+        })
+
+    def export_classes(self) -> pd.DataFrame:
+        return pd.DataFrame(data={
+            headers.classes.value: self.classes.values(),
+        })
+
+
+class Parser(BaseParser):
     def __init__(self, loader: Loader, *args, **kwargs):
         self.loader: Loader = loader
         self.initialize_dictionaries()
@@ -94,28 +142,3 @@ class Parser(object):
         for class_lessons in self.loader.lessons.values():
             for lesson in class_lessons:
                 self.lessons.append(self.parse_lesson(lesson))
-
-    def export_teachers(self) -> pd.DataFrame:
-        return pd.DataFrame(data={
-            headers.teachers.value: self.teachers.values(),
-        })
-
-    def export_subjects(self) -> pd.DataFrame:
-        return pd.DataFrame(data={
-            headers.subjects.value: self.subjects.values(),
-        })
-
-    def export_classrooms(self) -> pd.DataFrame:
-        return pd.DataFrame(data={
-            headers.classrooms.value: self.classrooms.values(),
-        })
-
-    def export_periods(self) -> pd.DataFrame:
-        return pd.DataFrame(data={
-            headers.periods.value: self.periods.values(),
-        })
-
-    def export_classes(self) -> pd.DataFrame:
-        return pd.DataFrame(data={
-            headers.classes.value: self.classes.values(),
-        })
