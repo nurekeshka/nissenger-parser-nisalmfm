@@ -6,6 +6,7 @@ import pandas as pd
 class Timetable(object):
     def __init__(self, parser: Parser, *args, **kwargs):
         self.parser = parser
+        self.time = current_time()
 
         # self.initialize_table()
 
