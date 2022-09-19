@@ -1,7 +1,7 @@
 from constants import CLASSROOM_CHANGES
 from constants import TEACHER_CHANGES
 from constants import SUBJECT_CHANGES
-from typing import Tuple
+from typing import List, Tuple
 
 
 class BaseTimetableEntity(object):
@@ -62,12 +62,12 @@ class Class(BaseTimetableEntity):
 
 class Lesson(object):
     def __init__(self, subject: Subject, period: Period, teacher: Teacher, classroom: Classroom, classes: Tuple[Class], duration: int):
-        self.subject = subject
-        self.period = period
-        self.teacher = teacher
-        self.classroom = classroom
-        self.classes = classes
-        self.duration = duration
+        self.subject: Subject = subject
+        self.period: Period = period
+        self.teacher: Teacher = teacher
+        self.classroom: Classroom = classroom
+        self.classes: List[Class] = classes
+        self.duration: int = duration
 
     def __str__(self):
         return f'{self.subject} - {self.teacher}, {self.classroom}: {", ".join(map(str, self.classes))} :: {self.period} x{self.duration}'
