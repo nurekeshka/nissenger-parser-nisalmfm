@@ -74,13 +74,14 @@ class Class(BaseTimetableEntity):
 
 
 class Lesson(object):
-    def __init__(self, subject: Subject, period: Period, teacher: Teacher, classroom: Classroom, classes: Tuple[Class], duration: int):
+    def __init__(self, subject: Subject, period: Period, teacher: Teacher, classroom: Classroom, classes: Tuple[Class], duration: int, day: Day):
         self.subject: Subject = subject
         self.period: Period = period
         self.teacher: Teacher = teacher
         self.classroom: Classroom = classroom
         self.classes: List[Class] = classes
         self.duration: int = duration
+        self.day: Day = day
 
     def __str__(self):
         return f'{self.subject} - {self.teacher}, {self.classroom}: {", ".join(map(str, self.classes))} :: {self.period} x{self.duration}'
