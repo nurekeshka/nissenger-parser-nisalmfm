@@ -82,8 +82,8 @@ class Parser(BaseParser):
                 teacher[indexes.short.value])
 
         for period in self.loader.tables[indexes.periods.value][indexes.data_rows.value]:
-            self.periods[period[indexes.id.value]] = Period(
-                period[indexes.period.value], period[indexes.starttime.value], period['endtime'])
+            self.periods[int(period[indexes.id.value])] = Period(
+                period[indexes.period.value], period[indexes.starttime.value], period[indexes.endtime.value])
 
         for subject in self.loader.tables[indexes.subjects.value][indexes.data_rows.value]:
             self.subjects[subject[indexes.id.value]] = Subject(
