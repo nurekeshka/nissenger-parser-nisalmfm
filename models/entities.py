@@ -1,6 +1,7 @@
 from constants import CLASSROOM_CHANGES
 from constants import TEACHER_CHANGES
 from constants import SUBJECT_CHANGES
+from constants import DAYS
 from typing import List, Tuple
 
 
@@ -31,6 +32,18 @@ class ParseTitleMixin(object):
 
 class Teacher(BaseTimetableEntity, ParseTitleMixin):
     changes = TEACHER_CHANGES
+
+
+class Day(BaseTimetableEntity):
+    def __init__(self, number: int):
+        self.number = int(number)
+        self.name = DAYS[number]
+
+    def __str__(self):
+        return self.name
+
+    def __int__(self):
+        return self.number
 
 
 class Period(BaseTimetableEntity):
