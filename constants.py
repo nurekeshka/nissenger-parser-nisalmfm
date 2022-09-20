@@ -98,6 +98,7 @@ SUBJECT_CHANGES = {
 
 
 DAYS = (
+    None,
     'monday',
     'tuesday',
     'weekday',
