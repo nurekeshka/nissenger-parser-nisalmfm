@@ -1,6 +1,6 @@
+from datetime import datetime
 from datetime import time
 from django.db import models
-from typing import List
 from typing import Set
 
 
@@ -23,6 +23,13 @@ class School(models.Model):
     class Meta:
         verbose_name = 'school'
         verbose_name_plural = 'schools'
+
+
+class Timetable(models.Model):
+    creation_datetime: datetime = models.DateTimeField(auto_now_add=True)
+
+    school: School = models.ForeignKey(
+        School, on_delete=models.CASCADE, verbose_name='school')
 
 
 class Day(models.Model):
@@ -48,8 +55,8 @@ class Class(models.Model):
     grade: int = models.IntegerField(choices=Grades.choices)
     letter: str = models.CharField(max_length=1)
 
-    school: School = models.ForeignKey(
-        School, on_delete=models.CASCADE, verbose_name='school')
+    timetable = models.ForeignKey(
+        Timetable, on_delete=models.CASCADE, verbose_name='timetable')
 
     class Meta:
         verbose_name = 'class'
@@ -63,8 +70,8 @@ class Group(models.Model):
     name: str = models.CharField(max_length=25, verbose_name='name')
     classes: Set[Class] = models.ManyToManyField(Class, verbose_name='classes')
 
-    school: School = models.ForeignKey(
-        School, on_delete=models.CASCADE, verbose_name='school')
+    timetable = models.ForeignKey(
+        Timetable, on_delete=models.CASCADE, verbose_name='timetable')
 
     class Meta:
         verbose_name = 'group'
@@ -76,8 +83,9 @@ class Group(models.Model):
 
 class Teacher(models.Model):
     name: str = models.CharField(max_length=50, verbose_name='name')
-    school: School = models.ForeignKey(
-        School, on_delete=models.CASCADE, verbose_name='school')
+
+    timetable = models.ForeignKey(
+        Timetable, on_delete=models.CASCADE, verbose_name='timetable')
 
     class Meta:
         verbose_name = 'teacher'
@@ -92,8 +100,8 @@ class Period(models.Model):
     endtime: time = models.TimeField(verbose_name='endtime')
     number: int = models.IntegerField(verbose_name='number')
 
-    school: School = models.ForeignKey(
-        School, on_delete=models.CASCADE, verbose_name='school')
+    timetable = models.ForeignKey(
+        Timetable, on_delete=models.CASCADE, verbose_name='timetable')
 
     class Meta:
         verbose_name = 'period'
@@ -108,8 +116,8 @@ class Period(models.Model):
 
 class Classroom(models.Model):
     name: str = models.CharField(max_length=50, verbose_name='name')
-    school: School = models.ForeignKey(
-        School, on_delete=models.CASCADE, verbose_name='school')
+    timetable = models.ForeignKey(
+        Timetable, on_delete=models.CASCADE, verbose_name='timetable')
 
     class Meta:
         verbose_name = 'classroom'
@@ -121,8 +129,8 @@ class Classroom(models.Model):
 
 class Subject(models.Model):
     name: str = models.CharField(max_length=50, verbose_name='name')
-    school: School = models.ForeignKey(
-        School, on_delete=models.CASCADE, verbose_name='school')
+    timetable = models.ForeignKey(
+        Timetable, on_delete=models.CASCADE, verbose_name='timetable')
 
     class Meta:
         verbose_name = 'subject'
@@ -146,8 +154,8 @@ class Lesson(models.Model):
     day: Day = models.ForeignKey(
         Day, on_delete=models.CASCADE, verbose_name='day')
 
-    school: School = models.ForeignKey(
-        School, on_delete=models.CASCADE, verbose_name='school')
+    timetable = models.ForeignKey(
+        Timetable, on_delete=models.CASCADE, verbose_name='timetable')
 
     class Meta:
         verbose_name = 'lesson'
