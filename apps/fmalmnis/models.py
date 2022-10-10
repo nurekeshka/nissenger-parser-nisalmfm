@@ -37,9 +37,15 @@ class Day(models.Model):
 
 
 class Class(models.Model):
-    grade_choice = (7, 8, 9, 10, 11, 12)
+    class Grades(models.IntegerChoices):
+        seven = 7
+        eight = 8
+        nine = 9
+        ten = 10
+        eleven = 11
+        twelve = 12
 
-    grade: int = models.IntegerChoices(grade_choice)
+    grade: int = models.IntegerField(choices=Grades)
     letter: str = models.CharField(max_length=1)
 
     school: School = models.ForeignKey(
@@ -134,7 +140,7 @@ class Lesson(models.Model):
     teacher: Teacher = models.ForeignKey(
         Teacher, on_delete=models.CASCADE, verbose_name='teacher')
     period: Period = models.ForeignKey(
-        period, on_delete=models.CASCADE, verbose_name='period')
+        Period, on_delete=models.CASCADE, verbose_name='period')
     group: Group = models.ForeignKey(
         Group, on_delete=models.CASCADE, verbose_name='group')
     day: Day = models.ForeignKey(
