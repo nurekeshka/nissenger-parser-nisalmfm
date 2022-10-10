@@ -38,14 +38,14 @@ class Day(models.Model):
 
 class Class(models.Model):
     class Grades(models.IntegerChoices):
-        seven = 7
-        eight = 8
-        nine = 9
-        ten = 10
-        eleven = 11
-        twelve = 12
+        seven = (7, 'seven')
+        eight = (8, 'eight')
+        nine = (9, 'nine')
+        ten = (10, 'ten')
+        eleven = (11, 'eleven')
+        twelve = (12, 'twelve')
 
-    grade: int = models.IntegerField(choices=Grades)
+    grade: int = models.IntegerField(choices=Grades.choices)
     letter: str = models.CharField(max_length=1)
 
     school: School = models.ForeignKey(
