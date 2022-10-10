@@ -14,6 +14,11 @@ class SchoolAdmin(admin.ModelAdmin):
     fields = ('name', 'city')
 
 
+@admin.register(models.Timetable)
+class TimetableAdmin(admin.ModelAdmin):
+    list_display = ('creation_datetime',)
+
+
 @admin.register(models.Day)
 class DayAdmin(admin.ModelAdmin):
     list_display = ('name',)
@@ -22,43 +27,43 @@ class DayAdmin(admin.ModelAdmin):
 
 @admin.register(models.Class)
 class ClassAdmin(admin.ModelAdmin):
-    list_display = ('grade', 'letter', 'school')
-    fields = ('grade', 'letter', 'school')
+    list_display = ('grade', 'letter', 'timetable')
+    fields = ('grade', 'letter', 'timetable')
 
 
 @admin.register(models.Group)
 class GroupAdmin(admin.ModelAdmin):
-    list_display = ('name', 'school')
-    fields = ('name', 'classes', 'school')
+    list_display = ('name', 'timetable')
+    fields = ('name', 'classes', 'timetable')
 
 
 @admin.register(models.Teacher)
 class TeacherAdmin(admin.ModelAdmin):
-    list_display = ('name', 'school')
-    fields = ('name', 'school')
+    list_display = ('name', 'timetable')
+    fields = ('name', 'timetable')
 
 
 @admin.register(models.Period)
 class PeriodAdmin(admin.ModelAdmin):
-    list_display = ('number', 'starttime', 'endtime', 'school')
-    fields = ('number', ('starttime', 'endtime', 'school'))
+    list_display = ('number', 'starttime', 'endtime', 'timetable')
+    fields = ('number', ('starttime', 'endtime', 'timetable'))
 
 
 @admin.register(models.Classroom)
 class ClassroomAdmin(admin.ModelAdmin):
-    list_display = ('name', 'school')
-    fields = ('name', 'school')
+    list_display = ('name', 'timetable')
+    fields = ('name', 'timetable')
 
 
 @admin.register(models.Subject)
 class SubjectAdmin(admin.ModelAdmin):
-    list_display = ('name', 'school')
-    fields = ('name', 'school')
+    list_display = ('name', 'timetable')
+    fields = ('name', 'timetable')
 
 
 @admin.register(models.Lesson)
 class SubjectAdmin(admin.ModelAdmin):
     list_display = ('subject', 'classroom', 'teacher',
-                    'period', 'group', 'day', 'school')
+                    'period', 'group', 'day', 'timetable')
     fields = ('subject', 'classroom', 'teacher',
-              'period', 'group', 'day', 'school')
+              'period', 'group', 'day', 'timetable')
