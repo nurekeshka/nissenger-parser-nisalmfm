@@ -30,6 +30,7 @@ INSTALLED_APPS = [
 
     # PROJECT APPLICATIONS
     'apps.fmalmnis.apps.FmalmnisConfig',
+    'apps.core.apps.CoreConfig',
 
     # REST FRAMEWORK APPLICATIONS
     'rest_framework',
