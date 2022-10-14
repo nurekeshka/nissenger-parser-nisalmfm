@@ -1,7 +1,7 @@
-from datetime import datetime
-from datetime import time
-from django.db import models
+from datetime import datetime, time
 from typing import Set
+
+from django.db import models
 
 
 class City(models.Model):
@@ -24,12 +24,22 @@ class School(models.Model):
         verbose_name = 'school'
         verbose_name_plural = 'schools'
 
+    def __str__(self):
+        return self.name
+
 
 class Timetable(models.Model):
     creation_datetime: datetime = models.DateTimeField(auto_now_add=True)
 
     school: School = models.ForeignKey(
         School, on_delete=models.CASCADE, verbose_name='school')
+
+    class Meta:
+        verbose_name = 'timetable'
+        verbose_name_plural = 'schools'
+
+    def __str__(self):
+        return self.creation_datetime.strftime('%Y-%m-%d %H:%M:%S')
 
 
 class Day(models.Model):
