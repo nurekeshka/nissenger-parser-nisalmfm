@@ -1,8 +1,11 @@
+from rest_framework import status
+from rest_framework.response import Response
 from rest_framework.views import APIView
-from .constants import SCHOOL_NAME
-from .constants import CITY_NAME
-from apps.core import models
+
+from apps.core import models, serializers
+
 from . import utils
+from .constants import CITY_NAME, SCHOOL_NAME
 
 
 class DownloadView(APIView):
@@ -12,6 +15,10 @@ class DownloadView(APIView):
 
     def post(self, request, format=None):
         timetable = models.Timetable.objects.create(school=self.school)
+        utils.load_main_db(timetable)
+        serializer = serializers.TimetableSerializer(instance=timetable)
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 class Timetable(APIView):
