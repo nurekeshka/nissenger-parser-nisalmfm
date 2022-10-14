@@ -8,6 +8,10 @@ from apps.fmalmnis import constants as const
 from apps.fmalmnis.constants import TimetableIndexes as indexes
 
 
+def find_group_by_classes(classes: List[models.Class]) -> models.Group:
+    return models.Group.objects.filter(classes__in=classes)
+
+
 def load_teachers(teachers: list, timetable: models.Timetable):
     change = const.TEACHER_CHANGES
     changes = const.TEACHER_CHANGES.keys()
