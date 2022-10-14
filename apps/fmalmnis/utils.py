@@ -89,6 +89,24 @@ def request_timetable_database():
     return requests.post(url=const.TIMETABLE_DATABASE_LINK, json=__timetable_database_data()).json()
 
 
+def __timetable_lessons_by_subject(subject_id: str):
+    firstday, lastday = get_current_week()
+
+    return {
+        "__args": [
+            None,
+            {
+                "year": school_year(),
+                "datefrom": firstday,
+                "dateto": lastday,
+                "table": "subjects",
+                "id": subject_id,
+            }
+        ],
+        "__gsh": "00000000"
+    }
+
+
 def __timetable_database_data():
     return {
         "__args":
