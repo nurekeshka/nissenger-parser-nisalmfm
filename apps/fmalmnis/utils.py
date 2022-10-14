@@ -33,7 +33,7 @@ def load_subjects(subjects: list, timetable: models.Timetable):
         models.Subject.objects.create(name=name, timetable=timetable)
 
 
-def load_offices(classrooms: list, timetable: models.Timetable):
+def load_classrooms(classrooms: list, timetable: models.Timetable):
     change = const.CLASSROOM_CHANGES
     changes = const.CLASSROOM_CHANGES.keys()
 
@@ -66,7 +66,7 @@ def load_classes(class_names: list, timetable: models.Timetable):
 def load_entities(tables: dict, timetable: models.Timetable) -> dict:
     load_teachers(get_data_rows(tables[indexes.teachers.value]), timetable)
     load_subjects(get_data_rows(tables[indexes.subjects.value]), timetable)
-    load_offices(get_data_rows(tables[indexes.classrooms.value]), timetable)
+    load_classrooms(get_data_rows(tables[indexes.classrooms.value]), timetable)
     load_periods(get_data_rows(tables[indexes.periods.value]), timetable)
     load_classes(get_data_rows(tables[indexes.classes.value]), timetable)
 
