@@ -72,9 +72,21 @@ def load_entities(tables: dict, timetable: models.Timetable) -> dict:
 
 
 def load_main_db(timetable: models.Timetable):
-    data = request_timetable_database()
-    tables = get_tables(data)
+    response = request_timetable_database()
+    tables = get_tables(response)
     load_entities(tables, timetable)
+
+
+def load_lessons(timetable: models.Timetable, subjects_list: list):
+    for subject_id in subjects_list:
+        subject = models.Subject.objects.get(
+            name='subject', timetable=timetable)
+
+        response = request_lessons(subject_id)
+        lessons = get_lessons(response)
+
+        for lesson in lessons:
+            parse_lesson_by_subjects(lesson, subject)
 
 
 def request_lessons(subject_id: str) -> dict:
@@ -85,8 +97,16 @@ def get_tables(data: dict) -> List[dict]:
     return data['r']['tables']
 
 
+def get_lessons(data: dict) -> List[dict]:
+    return data['r']['ttitems']
+
+
 def get_data_rows(data: dict) -> List[dict]:
     return data['data_rows']
+
+
+def parse_lesson_by_subjects(lesson: dict, subject: models.Subject):
+    pass
 
 
 def request_timetable_database() -> dict:
