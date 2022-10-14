@@ -71,10 +71,14 @@ def load_entities(tables: dict, timetable: models.Timetable) -> dict:
     load_classes(get_data_rows(tables[indexes.classes.value]), timetable)
 
 
-def load_main_db(timetable: models.Timetable) -> requests.Response:
+def load_main_db(timetable: models.Timetable):
     data = request_timetable_database()
     tables = get_tables(data)
     load_entities(tables, timetable)
+
+
+def request_lessons(subject_id: str) -> dict:
+    return requests.post(url=const.TIMETABLE_LESSONS_LINK, json=__timetable_lessons_by_subject(subject_id)).json()
 
 
 def get_tables(data: dict) -> List[dict]:
@@ -85,7 +89,7 @@ def get_data_rows(data: dict) -> List[dict]:
     return data['data_rows']
 
 
-def request_timetable_database():
+def request_timetable_database() -> dict:
     return requests.post(url=const.TIMETABLE_DATABASE_LINK, json=__timetable_database_data()).json()
 
 
