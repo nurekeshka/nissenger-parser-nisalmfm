@@ -1,5 +1,5 @@
-from datetime import date
-from typing import List
+from datetime import date, timedelta
+from typing import List, Tuple
 
 import requests
 
@@ -86,10 +86,10 @@ def get_data_rows(data: dict) -> List[dict]:
 
 
 def request_timetable_database():
-    return requests.post(url=const.TIMETABLE_DATABASE_LINK, json=_timetable_database_data()).json()
+    return requests.post(url=const.TIMETABLE_DATABASE_LINK, json=__timetable_database_data()).json()
 
 
-def _timetable_database_data():
+def __timetable_database_data():
     return {
         "__args":
         [
@@ -133,3 +133,13 @@ def _timetable_database_data():
 def school_year() -> int:
     today = date.today()
     return today.year if today.month in range(9, 13) else today.year - 1
+
+
+def get_current_week() -> Tuple[str]:
+    today: date = date.today()
+    weekday: int = today.weekday()
+
+    firstday: date = today - timedelta(days=weekday)
+    lastday: date = firstday + timedelta(days=6)
+
+    return tuple(map(lambda day: day.strftime('%Y-%m-%d'), (firstday, lastday)))
