@@ -62,10 +62,11 @@ class Class(models.Model):
         eleven = (11, 'eleven')
         twelve = (12, 'twelve')
 
-    grade: int = models.IntegerField(choices=Grades.choices)
-    letter: str = models.CharField(max_length=1)
+    grade: int = models.IntegerField(
+        choices=Grades.choices, verbose_name='grade')
+    letter: str = models.CharField(max_length=1, verbose_name='letter')
 
-    timetable = models.ForeignKey(
+    timetable: Timetable = models.ForeignKey(
         Timetable, on_delete=models.CASCADE, verbose_name='timetable')
 
     class Meta:
