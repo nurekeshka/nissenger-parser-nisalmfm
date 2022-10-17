@@ -1,8 +1,9 @@
-from rest_framework.test import APITestCase
-from rest_framework import status
 from django.urls import reverse
-from apps.fmalmnis import utils
+from rest_framework import status
+from rest_framework.test import APITestCase
+
 from apps.core import models
+from apps.fmalmnis import utils
 
 
 class ParserTests(APITestCase):
