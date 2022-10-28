@@ -1,5 +1,5 @@
 from datetime import date, timedelta
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 
 import requests
 
@@ -16,59 +16,90 @@ def load_teachers(teachers: list, timetable: models.Timetable):
     change = const.TEACHER_CHANGES
     changes = const.TEACHER_CHANGES.keys()
 
+    table = dict()
+
     for teacher in teachers:
         name = change[teacher['short']
                       ] if teacher['short'] in changes else teacher['short']
-        models.Teacher.objects.create(
+        table[teacher['id']] = models.Teacher.objects.create(
             name=name.lower().title(), timetable=timetable)
+
+    return table
 
 
 def load_subjects(subjects: list, timetable: models.Timetable):
     change = const.SUBJECT_CHANGES
     changes = const.SUBJECT_CHANGES.keys()
 
+    table = dict()
+
     for subject in subjects:
         name = change[subject['name']
                       ] if subject['name'] in changes else subject['name']
-        models.Subject.objects.create(name=name, timetable=timetable)
+        table[subject['id']] = models.Subject.objects.get_or_create(
+            name=name, timetable=timetable)[0]
+
+    return table
 
 
 def load_classrooms(classrooms: list, timetable: models.Timetable):
     change = const.CLASSROOM_CHANGES
     changes = const.CLASSROOM_CHANGES.keys()
 
+    table = dict()
+
     for classroom in classrooms:
         name = change[classroom['short']
                       ] if classroom['short'] in changes else classroom['short']
-        models.Classroom.objects.create(name=name, timetable=timetable)
+        table[classroom['id']] = models.Classroom.objects.create(
+            name=name, timetable=timetable)
+
+    return table
 
 
 def load_periods(periods: list, timetable: models.Timetable):
+    table = dict()
+
     for period in periods:
-        models.Period.objects.create(
+        table[int(period['period'])] = models.Period.objects.create(
             number=period['period'], starttime=period['starttime'], endtime=period['endtime'], timetable=timetable)
 
+    return table
 
-def load_classes(class_names: list, timetable: models.Timetable):
-    for class_name in class_names:
-        grade = int(class_name['short'][:-1])
-        letter = class_name['short'][-1]
+
+def load_classes(classes: list, timetable: models.Timetable):
+    table = dict()
+
+    for _class in classes:
+        grade = int(_class['short'][:-1])
+        letter = _class['short'][-1]
 
         entity = models.Class.objects.create(
             grade=grade, letter=letter, timetable=timetable)
 
-        for number in range(1, 3):
+        table[_class['id']] = entity
+
+        for number in (1, 2):
             group = models.Group.objects.create(
-                name=f'{number} - группа: {entity}', timetable=timetable)
+                name=number, timetable=timetable)
             group.classes.add(entity)
+
+    return table
 
 
 def load_entities(tables: dict, timetable: models.Timetable) -> dict:
-    load_teachers(get_data_rows(tables[indexes.teachers.value]), timetable)
-    load_subjects(get_data_rows(tables[indexes.subjects.value]), timetable)
-    load_classrooms(get_data_rows(tables[indexes.classrooms.value]), timetable)
-    load_periods(get_data_rows(tables[indexes.periods.value]), timetable)
-    load_classes(get_data_rows(tables[indexes.classes.value]), timetable)
+    teachers = load_teachers(get_data_rows(
+        tables[indexes.teachers.value]), timetable)
+    subjects = load_subjects(get_data_rows(
+        tables[indexes.subjects.value]), timetable)
+    classrooms = load_classrooms(get_data_rows(
+        tables[indexes.classrooms.value]), timetable)
+    periods = load_periods(get_data_rows(
+        tables[indexes.periods.value]), timetable)
+    classes = load_classes(get_data_rows(
+        tables[indexes.classes.value]), timetable)
+
+    load_lessons(teachers, subjects, classrooms, periods, classes, timetable)
 
 
 def load_main_db(timetable: models.Timetable):
@@ -77,16 +108,25 @@ def load_main_db(timetable: models.Timetable):
     load_entities(tables, timetable)
 
 
-def load_lessons(timetable: models.Timetable, subjects_list: list):
-    for subject_id in subjects_list:
+def load_lessons(teachers: Dict[str, models.Teacher],
+                 subjects: Dict[str, models.Subject],
+                 classrooms: Dict[str, models.Classroom],
+                 periods: Dict[int, models.Period],
+                 classes: Dict[str, models.Class],
+                 timetable: models.Timetable,
+                 ):
+    data: Dict[str, dict] = {'teachers': teachers, 'classrooms': classrooms,
+                             'periods': periods, 'classes': classes}
+
+    for subject_id in subjects.keys():
         subject = models.Subject.objects.get(
-            name='subject', timetable=timetable)
+            name=subjects[subject_id], timetable=timetable)
 
         response = request_lessons(subject_id)
         lessons = get_lessons(response)
 
         for lesson in lessons:
-            parse_lesson_by_subjects(lesson, subject)
+            parse_lesson_by_subjects(lesson, subject, data, timetable)
 
 
 def request_lessons(subject_id: str) -> dict:
@@ -105,8 +145,39 @@ def get_data_rows(data: dict) -> List[dict]:
     return data['data_rows']
 
 
-def parse_lesson_by_subjects(lesson: dict, subject: models.Subject):
-    pass
+def parse_lesson_by_subjects(lesson: dict, subject: models.Subject, data: Dict[str, dict], timetable: models.Timetable):
+    lesson_classes = list()
+
+    for _class_name in lesson['classids']:
+        lesson_classes.append(data['classes'][_class_name])
+
+    if lesson['groupnames'][0] == '':
+        groups = models.Group.objects.filter(
+            classes__in=lesson_classes, timetable=timetable)
+
+    elif lesson['groupnames'][0] in ('1 Подгруппа', '2 Подгруппа'):
+        groups = models.Group.objects.get(
+            classes__in=lesson_classes, timetable=timetable, name=int(lesson['groupnames'][0][0]))
+
+    else:
+        groups = models.Group.objects.get_or_create(
+            name=lesson['groupnames'], timetable=timetable, classes__in=lesson_classes)
+
+    classroom = None
+    teacher = None
+    period = None
+    group = None
+    day = None
+
+    # models.Lesson.objects.create(
+    #     subject=subject,
+    #     classroom=classroom,
+    #     teacher=teacher,
+    #     period=period,
+    #     group=group,
+    #     day=day,
+    #     timetable=timetable,
+    # )
 
 
 def request_timetable_database() -> dict:

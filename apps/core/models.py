@@ -36,7 +36,7 @@ class Timetable(models.Model):
 
     class Meta:
         verbose_name = 'timetable'
-        verbose_name_plural = 'schools'
+        verbose_name_plural = 'timetables'
 
     def __str__(self):
         return self.creation_datetime.strftime('%Y-%m-%d %H:%M:%S')
