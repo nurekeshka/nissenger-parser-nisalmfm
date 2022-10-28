@@ -1,5 +1,0 @@
-__pycache__
-apps/*/migrations/*.py
-!__init__.py
-.env
-*.sqlite3
