@@ -17,7 +17,7 @@ class AbstractSender(object):
     @classmethod
     def request(self, *args, **kwargs):
         self.response: requests.Response = self.method(url=self.url)
-        self.data: dict | str = self.format()
+        self.format()
 
 
 class JsonSender(AbstractSender):
@@ -32,7 +32,7 @@ class JsonSender(AbstractSender):
             json=self.json(*args, **kwargs)
         )
 
-        self.data: dict | str = self.format()
+        self.format()
 
 
 class DatabaseSender(JsonSender):
@@ -90,17 +90,17 @@ class LessonsSender(JsonSender):
 
     @classmethod
     def json(self, *args, **kwargs) -> dict:
-        print(args)
-        print(kwargs)
+        firstday, lastday = utils.get_week()
+
         return {
             "__args": [
                 None,
                 {
                     "year": utils.get_school_year(),
-                    "datefrom": "2022-10-03",
-                    "dateto": "2022-10-09",
-                    "table": "classes",
-                    "id": "-30"
+                    "datefrom": firstday,
+                    "dateto": lastday,
+                    "table": kwargs['by'],
+                    "id": kwargs['id'],
                 }
             ],
             "__gsh": "00000000"
