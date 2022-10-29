@@ -42,7 +42,7 @@ class DatabaseSender(JsonSender):
     @classmethod
     def format(self) -> dict:
         data = self.response.json()
-        return [table['data_rows'] for table in data['r']['tables']]
+        self.data = [table['data_rows'] for table in data['r']['tables']]
 
     @classmethod
     def json(self) -> dict:
