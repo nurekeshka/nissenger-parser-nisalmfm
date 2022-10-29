@@ -6,6 +6,13 @@ class Links(Enum):
     lessons = 'https://fmalmnis.edupage.org/timetable/server/currenttt.js?__func=curentttGetData'
 
 
+class By(object):
+    SUBJECT = 'subjects'
+    CLASS = 'classes'
+    TEACHER = 'teachers'
+    CLASSROOM = 'classrooms'
+
+
 DAYS = (
     None,
     'monday',
