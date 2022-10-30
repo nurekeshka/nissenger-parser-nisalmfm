@@ -32,7 +32,8 @@ class Class(BaseEntity):
 
 
 class Period(BaseEntity):
-    def __init__(self, number: int, starttime: str, endtime: str):
+    def __init__(self, id: str, number: int, starttime: str, endtime: str):
+        self.id = id
         self.number: int = int(number)
         self.starttime: str = starttime
         self.endtime: str = endtime
