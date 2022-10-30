@@ -1,10 +1,11 @@
-from entities import Classroom
+import entities
 import parsers
+from typing import List
 
 
 class AbstractTable(object):
     def __init__(self, data: dict | list, parser: parsers.AbstractParser):
-        self.data = data
+        self.data: List[entities.BaseEntity] = data
         self.parser: parsers.AbstractParser = parser
 
     def format(self):
@@ -12,7 +13,12 @@ class AbstractTable(object):
             self.data[i] = self.parser.format(self.data[i])
 
     def __getitem__(self, key: str):
-        return self.data[key]
+        if key.startswith('id='):
+            for i in range(len(self.data)):
+                if key.split('=')[1] == self.data[i].id:
+                    return self.data[i]
+
+        return None
 
     def __iter__(self):
         self.index = 0
