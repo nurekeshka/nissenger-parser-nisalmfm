@@ -5,8 +5,16 @@ import entities
 class AbstractParser(object):
     fixes = None
 
-    def format(data):
+    @classmethod
+    def format(self, data: dict) -> str:
+        kwargs = self.fix(data)
+        return self.to_object(**kwargs)
+
+    def fix(self, data: dict) -> dict:
         return data
+
+    def to_object(self, **kwargs):
+        return kwargs
 
 
 class DictionaryFixesParser(AbstractParser):
@@ -15,11 +23,6 @@ class DictionaryFixesParser(AbstractParser):
     name: str = None
 
     entity: entities.BaseEntity = None
-
-    @classmethod
-    def format(self, data: dict) -> str:
-        kwargs = self.fix(data)
-        return self.to_object(**kwargs)
 
     @classmethod
     def fix(self, data: dict) -> dict:
@@ -56,3 +59,9 @@ class ClassroomsParser(DictionaryFixesParser):
     name = 'short'
 
     entity: entities.Classroom = entities.Classroom
+
+
+class ClassesParser():
+    def format(self, name: str) -> str:
+        grade: int = int(name[:-1])
+        letter: int = name[-1]
