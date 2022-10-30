@@ -57,5 +57,11 @@ class ClassesTable(AbstractTable):
             data=data, parser=parsers.ClassesParser)
 
 
+class PeriodsTable(AbstractTable):
+    def __init__(self, data: dict | list):
+        super(PeriodsTable, self).__init__(
+            data=data, parser=parsers.PeriodParser)
+
+
 if __name__ == '__main__':
     pass
