@@ -1,3 +1,4 @@
+from entities import Classroom
 import parsers
 
 
@@ -36,6 +37,12 @@ class SubjectsTable(AbstractTable):
     def __init__(self, data: dict | list):
         super(SubjectsTable, self).__init__(
             data=data, parser=parsers.SubjectsParser)
+
+
+class ClassroomsTable(AbstractTable):
+    def __init__(self, data: dict | list):
+        super(ClassroomsTable, self).__init__(
+            data=data, parser=parsers.ClassroomsParser)
 
 
 if __name__ == '__main__':
