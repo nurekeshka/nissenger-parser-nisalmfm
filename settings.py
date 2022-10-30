@@ -71,7 +71,7 @@ DAYS = (
     None,
     'monday',
     'tuesday',
-    'weekday',
+    'wednesday',
     'thursday',
     'friday',
     'saturday',
