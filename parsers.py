@@ -76,3 +76,20 @@ class ClassesParser(AbstractParser):
     @classmethod
     def to_object(self, id: str, grade: int, letter: str):
         return entities.Class(id=id, grade=grade, letter=letter)
+
+
+class PeriodParser(AbstractParser):
+    id = 'id'
+    period = 'period'
+    starttime = 'starttime'
+    endtime = 'endtime'
+
+    @classmethod
+    def fix(self, data: dict):
+        data[self.period] = int(data[self.period])
+        return data
+
+    @classmethod
+    def to_object(self, id: str, period: int, starttime: str, endtime: str):
+        return entities.Period(id=id, number=period,
+                               starttime=starttime, endtime=endtime)
