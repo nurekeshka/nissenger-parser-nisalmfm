@@ -11,15 +11,3 @@ class By(object):
     CLASS = 'classes'
     TEACHER = 'teachers'
     CLASSROOM = 'classrooms'
-
-
-DAYS = (
-    None,
-    'monday',
-    'tuesday',
-    'weekday',
-    'thursday',
-    'friday',
-    'saturday',
-    'sunday',
-)

@@ -65,3 +65,15 @@ SUBJECT_FIXES_DICTIONARY = {
     "Начальная военная и технологическая подготовка": "НВП",
     "Человек. Общество. Право (Основы права)": "Основы Права",
 }
+
+
+DAYS = (
+    None,
+    'monday',
+    'tuesday',
+    'weekday',
+    'thursday',
+    'friday',
+    'saturday',
+    'sunday',
+)
