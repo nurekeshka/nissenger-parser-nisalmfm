@@ -45,5 +45,11 @@ class ClassroomsTable(AbstractTable):
             data=data, parser=parsers.ClassroomsParser)
 
 
+class ClassesTable(AbstractTable):
+    def __init__(self, data: dict | list):
+        super(ClassesTable, self).__init__(
+            data=data, parser=parsers.ClassesParser)
+
+
 if __name__ == '__main__':
     pass
