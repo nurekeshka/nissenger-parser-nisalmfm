@@ -1,5 +1,6 @@
 import settings
 import entities
+import datetime
 
 
 class AbstractParser(object):
@@ -93,3 +94,19 @@ class PeriodParser(AbstractParser):
     def to_object(self, id: str, period: int, starttime: str, endtime: str):
         return entities.Period(id=id, number=period,
                                starttime=starttime, endtime=endtime)
+
+
+class DaysParser(AbstractParser):
+    date_format = '%Y-%m-%d'
+
+    @classmethod
+    def fix(self, data: str):
+        day = datetime.datetime.strptime(data, self.date_format)
+        number = day.isoweekday()
+        name = settings.DAYS[number]
+
+        return {'number': number, 'name': name}
+
+    @classmethod
+    def to_object(self, number: int, name: str):
+        return entities.Day(number=number, name=name)
