@@ -48,3 +48,11 @@ class SubjectsParser(DictionaryFixesParser):
     name = 'name'
 
     entity: entities.Subject = entities.Subject
+
+
+class ClassroomsParser(DictionaryFixesParser):
+    fixes = settings.CLASSROOM_FIXES_DICTIONARY
+    id = 'id'
+    name = 'short'
+
+    entity: entities.Classroom = entities.Classroom
