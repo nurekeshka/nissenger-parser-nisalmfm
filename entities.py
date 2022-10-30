@@ -22,10 +22,10 @@ class Classroom(BaseEntity):
 
 
 class Class(BaseEntity):
-    def __init__(self, id: str, name: str):
+    def __init__(self, id: str, grade: int, letter: str):
         self.id: str = id
-        self.grade: int = int(name[:-1])
-        self.letter: int = name[-1]
+        self.grade: int = grade
+        self.letter: str = letter
 
     def __str__(self):
         return f'{self.grade}{self.letter}'
