@@ -61,7 +61,18 @@ class ClassroomsParser(DictionaryFixesParser):
     entity: entities.Classroom = entities.Classroom
 
 
-class ClassesParser():
-    def format(self, name: str) -> str:
-        grade: int = int(name[:-1])
-        letter: int = name[-1]
+class ClassesParser(AbstractParser):
+    id = 'id'
+    name = 'short'
+
+    @classmethod
+    def fix(self, data: dict):
+        id = data['id']
+        grade = int(data[self.name][:-1])
+        letter = data[self.name][-1]
+
+        return {'id': id, 'grade': grade, 'letter': letter}
+
+    @classmethod
+    def to_object(self, id: str, grade: int, letter: str):
+        return entities.Class(id=id, grade=grade, letter=letter)
