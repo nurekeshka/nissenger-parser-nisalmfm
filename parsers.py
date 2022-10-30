@@ -40,3 +40,11 @@ class TeachersParser(DictionaryFixesParser):
     name = 'short'
 
     entity: entities.Teacher = entities.Teacher
+
+
+class SubjectsParser(DictionaryFixesParser):
+    fixes = settings.SUBJECT_FIXES_DICTIONARY
+    id = 'id'
+    name = 'name'
+
+    entity: entities.Subject = entities.Subject
