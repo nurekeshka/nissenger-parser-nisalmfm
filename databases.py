@@ -1,12 +1,14 @@
 import entities
 import parsers
-from typing import List
+from typing import Dict, List
+import exceptions
 
 
 class AbstractTable(object):
-    def __init__(self, data: dict | list, parser: parsers.AbstractParser):
+    def __init__(self, data: dict | list, parser: parsers.AbstractParser = None):
         self.data: List[entities.BaseEntity] = data
         self.parser: parsers.AbstractParser = parser
+        self.format()
 
     def format(self):
         for i in range(len(self.data)):
@@ -31,6 +33,9 @@ class AbstractTable(object):
             return self.data[index]
         else:
             raise StopIteration
+
+    def __str__(self):
+        return str(self.data)
 
 
 class TeachersTable(AbstractTable):
@@ -63,5 +68,34 @@ class PeriodsTable(AbstractTable):
             data=data, parser=parsers.PeriodParser)
 
 
-if __name__ == '__main__':
-    pass
+class AbstractDatabase(object):
+    def __init__(self):
+        self.database: dict = dict()
+
+    def load(self, data: AbstractTable | Dict[str, AbstractTable]):
+        if type(data) is dict:
+            for key, table in data.items():
+                if isinstance(table, AbstractTable):
+                    self.database[key] = table
+                else:
+                    raise exceptions.TableTypeError()
+        else:
+            raise exceptions.TableTypeError()
+
+    def __getitem__(self, key: int):
+        return self.database[key]
+
+    def __iter__(self):
+        self.index = 0
+        return self
+
+    def __next__(self):
+        if self.index < len(self.database):
+            index = self.index
+            self.index += 1
+            return self.database[index]
+        else:
+            raise StopIteration
+
+    def __str__(self):
+        return '\n'.join(map(lambda table: f'{table[0]}: {table[1]}', self.database.items()))
