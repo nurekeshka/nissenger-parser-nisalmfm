@@ -1,3 +1,4 @@
+from typing import Dict
 import utils
 import requests
 from constants import Links as links
@@ -42,7 +43,8 @@ class DatabaseSender(JsonSender):
     @classmethod
     def format(self) -> dict:
         data = self.response.json()
-        self.data = [table['data_rows'] for table in data['r']['tables']]
+        self.data: Dict[str, dict] = {
+            table['id']: table['data_rows'] for table in data['r']['tables']}
 
     @classmethod
     def json(self) -> dict:
