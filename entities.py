@@ -65,7 +65,7 @@ class Lesson(BaseEntity):
         self.subject = subject
         self.teacher = teacher
         self.classroom = classroom
-        self.classes = group
+        self.group = group
         self.period = period
         self.day = day
 
