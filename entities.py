@@ -12,7 +12,7 @@ class BaseEntity(object):
 
     def getattributes(self) -> List[str]:
         return [attr for attr in dir(self) if not inspect.ismethod(
-            attr) and not attr.startswith('_')]
+            attr) and not attr.startswith('_') and not attr == 'getattributes']
 
 
 class Teacher(BaseEntity):
