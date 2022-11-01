@@ -8,19 +8,25 @@ class AbstractTable(object):
     def __init__(self, data: dict | list, parser: parsers.AbstractParser = None):
         self.data: List[entities.BaseEntity] = data
         self.parser: parsers.AbstractParser = parser
-        self.format()
+
+        if self.parser:
+            self.format()
 
     def format(self):
         for i in range(len(self.data)):
             self.data[i] = self.parser.format(self.data[i])
 
     def __getitem__(self, key: str):
-        if key.startswith('id='):
-            for i in range(len(self.data)):
-                if key.split('=')[1] == self.data[i].id:
-                    return self.data[i]
+        try:
+            attribute, value = key.split('=')
 
-        return None
+            for i in range(len(self.data)):
+                if value == str(getattr(self.data[i], attribute)):
+                    return self.data[i]
+        except TypeError:
+            pass
+
+        return self.data[i]
 
     def __iter__(self):
         self.index = 0
