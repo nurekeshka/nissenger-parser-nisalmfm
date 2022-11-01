@@ -1,5 +1,4 @@
-
-
+import inspect
 from typing import List
 
 
@@ -10,6 +9,10 @@ class BaseEntity(object):
 
     def __str__(self):
         return self.name
+
+    def getattributes(self) -> List[str]:
+        return [attr for attr in dir(self) if not inspect.ismethod(
+            attr) and not attr.startswith('_')]
 
 
 class Teacher(BaseEntity):
