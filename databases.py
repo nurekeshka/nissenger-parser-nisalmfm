@@ -72,7 +72,7 @@ class AbstractDatabase(object):
     def __init__(self):
         self.database: dict = dict()
 
-    def load(self, data: AbstractTable | Dict[str, AbstractTable]):
+    def load(self, data: Dict[str, AbstractTable]):
         if type(data) is dict:
             for key, table in data.items():
                 if isinstance(table, AbstractTable):
@@ -99,3 +99,17 @@ class AbstractDatabase(object):
 
     def __str__(self):
         return '\n'.join(map(lambda table: f'{table[0]}: {table[1]}', self.database.items()))
+
+
+class TimetableDatabase(AbstractDatabase):
+    tables: Dict[str, AbstractTable] = {
+        'teachers': TeachersTable,
+        'subjects': SubjectsTable,
+        'classrooms': ClassroomsTable,
+        'classes': ClassesTable,
+        'periods': PeriodsTable,
+    }
+
+    def timetable_load(self, data: Dict[str, dict]):
+        self.load({name: table(data[name])
+                  for name, table in self.tables.items()})
