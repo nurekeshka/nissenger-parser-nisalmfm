@@ -51,6 +51,12 @@ class Day(BaseEntity):
         self.name = name
 
 
+class Group(BaseEntity):
+    def __init__(self, name: str, classes: List[Class]):
+        self.name = name
+        self.classes = classes
+
+
 class Lesson(BaseEntity):
     def __init__(self, subject: Subject, teacher: Teacher, classroom: Classroom, classes: List[Class], period: Period, day: Day):
         self.subject = subject
