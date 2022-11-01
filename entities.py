@@ -1,5 +1,8 @@
 
 
+from typing import List
+
+
 class BaseEntity(object):
     def __init__(self, id: str, name: str):
         self.id: str = id
@@ -46,3 +49,16 @@ class Day(BaseEntity):
     def __init__(self, number: int, name: str):
         self.number = int(number)
         self.name = name
+
+
+class Lesson(BaseEntity):
+    def __init__(self, subject: Subject, teacher: Teacher, classroom: Classroom, classes: List[Class], period: Period, day: Day):
+        self.subject = subject
+        self.teacher = teacher
+        self.classroom = classroom
+        self.classes = classes
+        self.period = period
+        self.day = day
+
+    def __str__(self):
+        return self.subject.__str__()
