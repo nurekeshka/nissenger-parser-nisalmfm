@@ -58,11 +58,11 @@ class Group(BaseEntity):
 
 
 class Lesson(BaseEntity):
-    def __init__(self, subject: Subject, teacher: Teacher, classroom: Classroom, classes: List[Class], period: Period, day: Day):
+    def __init__(self, subject: Subject, teacher: Teacher, classroom: Classroom, group: Group, period: Period, day: Day):
         self.subject = subject
         self.teacher = teacher
         self.classroom = classroom
-        self.classes = classes
+        self.classes = group
         self.period = period
         self.day = day
 
