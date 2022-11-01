@@ -19,14 +19,18 @@ class AbstractTable(object):
     def __getitem__(self, key: str):
         try:
             attribute, value = key.split('=')
+            result = [self.data[i] for i in range(
+                len(self.data)) if value == str(getattr(self.data[i], attribute))]
 
-            for i in range(len(self.data)):
-                if value == str(getattr(self.data[i], attribute)):
-                    return self.data[i]
+            if len(result) == 1:
+                return result[0]
+            elif len(result > 1):
+                return result
+
         except TypeError:
             pass
 
-        return self.data[i]
+        return self.data[key]
 
     def __iter__(self):
         self.index = 0
