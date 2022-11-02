@@ -13,7 +13,7 @@ class AbstractSender(object):
 
     @classmethod
     def format(self) -> dict | str:
-        return self.response.json()
+        self.data = self.response.json()
 
     @classmethod
     def request(self, *args, **kwargs):
@@ -107,3 +107,12 @@ class LessonsSender(JsonSender):
             ],
             "__gsh": "00000000"
         }
+
+
+class TimetableSender(JsonSender):
+    url = 'http://localhost:8000/timetable/upload/'
+    method = requests.post
+
+    @classmethod
+    def json(self, *args, **kwargs) -> dict:
+        return kwargs['timetable']
