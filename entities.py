@@ -14,6 +14,9 @@ class BaseEntity(object):
         return [attr for attr in dir(self) if not inspect.ismethod(
             attr) and not attr.startswith('_') and not attr == 'getattributes']
 
+    def __json__(self) -> dict:
+        return {attribute: getattr(self, attribute) for attribute in self.getattributes()}
+
 
 class Teacher(BaseEntity):
     pass
@@ -59,6 +62,9 @@ class Group(BaseEntity):
         self.name = name
         self.classes = classes
 
+    def __json__(self) -> dict:
+        return {'name': self.name, 'classes': [_class.__json__() for _class in self.classes]}
+
 
 class Lesson(BaseEntity):
     def __init__(self, subject: Subject, teacher: Teacher, classroom: Classroom, group: Group, period: Period, day: Day):
@@ -71,3 +77,17 @@ class Lesson(BaseEntity):
 
     def __str__(self):
         return self.subject.__str__()
+
+    def __json__(self) -> dict:
+        return {attribute: getattr(self, attribute).__json__() for attribute in self.getattributes()}
+
+
+class Timetable(BaseEntity):
+    def __init__(self):
+        self.lessons = list()
+
+    def add(self, lessons: List[Lesson]):
+        self.lessons.extend(lessons)
+
+    def export(self) -> dict:
+        return [lesson.__json__() for lesson in self.lessons]
