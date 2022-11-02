@@ -145,7 +145,7 @@ class LessonsParser(AbstractParser):
         day = DaysParser().format(date)
 
         group = entities.Group(name=groupnames[0], classes=[
-                               database['classes'][f'id={classid}'] for classid in classids])
+            database['classes'][f'id={classid}'] for classid in classids])
 
         periods = [database['periods'][f'number={x}'] for x in range(
             int(uniperiod), int(uniperiod) + durationperiods)]
@@ -156,7 +156,7 @@ class LessonsParser(AbstractParser):
             lesson['subject'] = subject
             lesson['teacher'] = teachers[0]
             lesson['classroom'] = classrooms[0] if len(
-                classrooms) == 1 else ''
+                classrooms) == 1 else entities.Classroom(id='-100', name='')
             lesson['group'] = group
             lesson['period'] = period
             lesson['day'] = day
