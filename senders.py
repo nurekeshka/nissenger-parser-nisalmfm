@@ -1,7 +1,8 @@
+from constants import Links as links
 from typing import Dict
 import utils
 import requests
-from constants import Links as links
+import settings
 
 
 class AbstractSender(object):
@@ -110,7 +111,7 @@ class LessonsSender(JsonSender):
 
 
 class TimetableSender(JsonSender):
-    url = 'http://localhost:8000/timetable/upload/'
+    url = settings.SERVER_DOMAIN + 'timetable/upload/'
     method = requests.post
 
     @classmethod
