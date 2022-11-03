@@ -27,12 +27,6 @@ import constants
 import databases
 import parsers
 import entities
-import requests
-
-
-def bootstrap():
-    sender = senders.DatabaseSender()
-    sender.request()
 
 
 def main():
