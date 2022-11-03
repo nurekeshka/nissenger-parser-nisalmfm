@@ -1,7 +1,8 @@
 import entities
 import parsers
-from typing import Dict, List
 import exceptions
+
+from typing import Dict, List
 
 
 class AbstractTable(object):
