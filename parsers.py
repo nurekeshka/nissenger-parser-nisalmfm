@@ -144,24 +144,31 @@ class LessonsParser(AbstractParser):
 
         day = DaysParser().format(date)
 
-        group = entities.Group(name=groupnames[0], classes=[
-            database['classes'][f'id={classid}'] for classid in classids])
+        classes = [
+            database['classes'][f'id={classid}'] for classid in classids]
+
+        if groupnames[0] == '':
+            groups = [entities.Group(
+                name=f'{number} Подгруппа', classes=classes) for number in (1, 2)]
+        else:
+            groups = [entities.Group(name=groupnames[0], classes=classes)]
 
         periods = [database['periods'][f'number={x}'] for x in range(
             int(uniperiod), int(uniperiod) + durationperiods)]
 
         for period in periods:
-            lesson = dict()
+            for group in groups:
+                lesson = dict()
 
-            lesson['subject'] = subject
-            lesson['teacher'] = teachers[0]
-            lesson['classroom'] = classrooms[0] if len(
-                classrooms) == 1 else entities.Classroom(id='-100', name='')
-            lesson['group'] = group
-            lesson['period'] = period
-            lesson['day'] = day
+                lesson['subject'] = subject
+                lesson['teacher'] = teachers[0]
+                lesson['classroom'] = classrooms[0] if len(
+                    classrooms) == 1 else entities.Classroom(id='-100', name='')
+                lesson['group'] = group
+                lesson['period'] = period
+                lesson['day'] = day
 
-            lessons.append(lesson)
+                lessons.append(lesson)
 
         return lessons
 
