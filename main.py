@@ -1,22 +1,33 @@
-from constants import EdupageMainDbIDs as indexes
-from objects import Timetable
-from objects import Export
-import sender
-import parser
+import senders
+import constants
+import databases
+import parsers
+import entities
 
 
 def main():
-    response = sender.request_main_db()
-    data = parser.convert_main_db_response( response.json() )
-    timetable = Timetable(data)
+    sender = senders.DatabaseSender()
+    sender.request()
 
-    # for class_id in classes.keys():
-    #     response = sender.request_current_js(class_id)
-    #     return parser.parse_class_lessons(response)
-    
-    export = Export(timetable)
-    result = export.as_json()
-    print(result)
+    database = databases.TimetableDatabase()
+    database.timetable_load(sender.data)
+
+    timetable = entities.Timetable()
+
+    for subject in database['subjects']:
+        sender = senders.LessonsSender()
+        sender.request(id=subject.id, by=constants.By.SUBJECT)
+
+        for lesson__json in sender.data:
+            parser = parsers.LessonsParser()
+            lessons = parser.format(
+                data={'lesson': lesson__json, 'database': database})
+            timetable.add(lessons)
+
+    data = timetable.export()
+
+    sender = senders.TimetableSender()
+    sender.request(timetable=data)
 
 
 if __name__ == '__main__':
