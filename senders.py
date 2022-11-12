@@ -127,7 +127,7 @@ class LessonsSender(JsonSender):
 
 class TimetableSender(JsonSender):
     id = 1
-    url = settings.SERVER_DOMAIN + f'timetable/download?school={id}'
+    url = settings.SERVER_DOMAIN + f'timetable/upload?school={id}'
     method = requests.post
 
     @classmethod
