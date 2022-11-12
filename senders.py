@@ -13,7 +13,7 @@ class AbstractSender(object):
         pass
 
     @classmethod
-    def format(self) -> dict | str:
+    def format(self):
         self.data = self.response.json()
 
     @classmethod
@@ -37,12 +37,27 @@ class JsonSender(AbstractSender):
         self.format()
 
 
+class FormDataSender(AbstractSender):
+    @classmethod
+    def data(self, *args, **kwargs):
+        return {}
+
+    @classmethod
+    def request(self, *args, **kwargs):
+        self.response: requests.Response = self.method(
+            url=self.url,
+            data=self.data(*args, **kwargs)
+        )
+
+        self.format()
+
+
 class DatabaseSender(JsonSender):
     url = links.database.value
     method = requests.post
 
     @classmethod
-    def format(self) -> dict:
+    def format(self):
         data = self.response.json()
         self.data: Dict[str, dict] = {
             table['id']: table['data_rows'] for table in data['r']['tables']}
@@ -87,7 +102,7 @@ class LessonsSender(JsonSender):
     method = requests.post
 
     @classmethod
-    def format(self) -> dict:
+    def format(self):
         data = self.response.json()
         self.data = data['r']['ttitems']
 
@@ -111,9 +126,14 @@ class LessonsSender(JsonSender):
 
 
 class TimetableSender(JsonSender):
-    url = settings.SERVER_DOMAIN + 'timetable/upload/'
+    id = 1
+    url = settings.SERVER_DOMAIN + f'timetable/download?school={id}'
     method = requests.post
 
     @classmethod
     def json(self, *args, **kwargs) -> dict:
-        return kwargs['timetable']
+        return {'timetable': kwargs['timetable']}
+
+    @classmethod
+    def format(self):
+        pass
