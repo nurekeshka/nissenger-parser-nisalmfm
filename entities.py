@@ -12,7 +12,7 @@ class BaseEntity(object):
 
     def getattributes(self) -> List[str]:
         return [attr for attr in dir(self) if not inspect.ismethod(
-            attr) and not attr.startswith('_') and not attr == 'getattributes']
+            attr) and not attr.startswith('_') and not attr in ('getattributes', 'id')]
 
     def __json__(self) -> dict:
         return {attribute: getattr(self, attribute) for attribute in self.getattributes()}
