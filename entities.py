@@ -29,13 +29,6 @@ class Subject(BaseEntity):
         self.name = name
         self.type = type
 
-    FOREIGN_LANGUAGE = 'FL'
-    CASUAL_SUBJECT = 'CS'
-    PROFILE_DIRECTED = 'PD'
-    SAT_PREPARATION = 'SP'
-
-    type = CASUAL_SUBJECT
-
 
 class Classroom(BaseEntity):
     pass
