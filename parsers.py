@@ -54,6 +54,20 @@ class SubjectsParser(DictionaryFixesParser):
 
     entity: entities.Subject = entities.Subject
 
+    @classmethod
+    def fix(self, data: dict) -> dict:
+        id = data[self.id]
+        name = self.fixes[data[self.name]] if data[self.name] in self.fixes.keys(
+        ) else data[self.name].lower().title()
+
+        type = settings.SUBJECT_TYPES[data[self.name]]
+
+        return {'id': id, 'name': name, 'type': type}
+
+    @classmethod
+    def to_object(self, id: str, name: str, type: str) -> entity:
+        return self.entity(id=id, name=name, type=type)
+
 
 class ClassroomsParser(DictionaryFixesParser):
     fixes = settings.CLASSROOM_FIXES_DICTIONARY
@@ -134,7 +148,7 @@ class LessonsParser(AbstractParser):
             cellSlices: str = None, cellOrder: int = None):
         lessons = list()
 
-        subject = database['subjects'][f'id={subjectid}']
+        subject: entities.Subject = database['subjects'][f'id={subjectid}']
 
         teachers = [database['teachers']
                     [f'id={teacherid}'] for teacherid in teacherids]
@@ -147,11 +161,15 @@ class LessonsParser(AbstractParser):
         classes = [
             database['classes'][f'id={classid}'] for classid in classids]
 
-        if groupnames[0] == '':
+        # If it is lesson for both groups
+        if groupnames[0] == '' and len(classes) == 1:
             groups = [entities.Group(
-                name=f'{number} Подгруппа', classes=classes) for number in (1, 2)]
+                name=str(number), classes=classes) for number in (1, 2)]
+        elif groupnames[0] == '' and len(classes) > 1:
+            groups = [entities.Group(name=subject.name, classes=classes)]
         else:
-            groups = [entities.Group(name=groupnames[0], classes=classes)]
+            groups = [entities.Group(name=self.try_extract_group_number(
+                groupnames[0]), classes=classes)]
 
         periods = [database['periods'][f'number={x}'] for x in range(
             int(uniperiod), int(uniperiod) + durationperiods)]
@@ -180,3 +198,11 @@ class LessonsParser(AbstractParser):
                                 group=lesson['group'],
                                 period=lesson['period'],
                                 day=lesson['day']) for lesson in lessons]
+
+    @classmethod
+    def try_extract_group_number(self, name: str) -> int:
+        for ch in name.split():
+            if ch.isdigit():
+                return int(ch)
+
+        return name
