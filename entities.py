@@ -1,5 +1,6 @@
 import inspect
 from typing import List
+from openpyxl import Workbook
 
 
 class BaseEntity(object):
@@ -23,7 +24,12 @@ class Teacher(BaseEntity):
 
 
 class Subject(BaseEntity):
-    pass
+    FOREIGN_LANGUAGE = 'FL'
+    CASUAL_SUBJECT = 'CS'
+    PROFILE_DIRECTED = 'PD'
+    SAT_PREPARATION = 'SP'
+
+    type = CASUAL_SUBJECT
 
 
 class Classroom(BaseEntity):
@@ -56,11 +62,17 @@ class Day(BaseEntity):
         self.number = int(number)
         self.name = name
 
+    def __str__(self):
+        return self.name
+
 
 class Group(BaseEntity):
     def __init__(self, name: str, classes: List[Class]):
         self.name = name
         self.classes = classes
+
+    def __str__(self):
+        return f'{self.name}: [{",".join(map(str, self.classes))}]'
 
     def __json__(self) -> dict:
         return {'name': self.name, 'classes': [_class.__json__() for _class in self.classes]}
@@ -84,10 +96,29 @@ class Lesson(BaseEntity):
 
 class Timetable(BaseEntity):
     def __init__(self):
-        self.lessons = list()
+        self.lessons: List[Lesson] = list()
 
     def add(self, lessons: List[Lesson]):
         self.lessons.extend(lessons)
 
-    def export(self) -> dict:
-        return [lesson.__json__() for lesson in self.lessons]
+    def export_as_excel(self):
+        wb = Workbook()
+        ws = wb.active
+
+        ws.title = 'timetable'
+
+        for row, lesson in enumerate(self.lessons, start=1):
+            for col, attribute in enumerate(lesson.getattributes(), start=1):
+                value = str(getattr(lesson, attribute))
+
+                ws.cell(row=row, column=col, value=value)
+
+        wb.save('timetable.xlsx')
+
+    def export(self, type: str = 'json') -> dict:
+        if type == 'json':
+            return [lesson.__json__() for lesson in self.lessons]
+        elif type == 'excel':
+            self.export_as_excel()
+        else:
+            raise ValueError(f'Unknown exportation type: {type}')
