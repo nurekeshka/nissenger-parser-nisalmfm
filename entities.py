@@ -24,6 +24,11 @@ class Teacher(BaseEntity):
 
 
 class Subject(BaseEntity):
+    def __init__(self, id: str, name: str, type: str):
+        self.id = id
+        self.name = name
+        self.type = type
+
     FOREIGN_LANGUAGE = 'FL'
     CASUAL_SUBJECT = 'CS'
     PROFILE_DIRECTED = 'PD'
