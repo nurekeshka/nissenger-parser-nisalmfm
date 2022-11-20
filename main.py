@@ -3,6 +3,7 @@ import constants
 import databases
 import parsers
 import entities
+import time
 
 
 def main():
@@ -31,4 +32,6 @@ def main():
 
 
 if __name__ == '__main__':
+    start = time.time()
     main()
+    print(time.time() - start)
