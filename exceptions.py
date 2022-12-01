@@ -11,3 +11,7 @@ class BaseMethodistError(Exception):
 
     def __init__(self):
         super(BaseMethodistError, self).__init__(self.details)
+
+
+class MoreThanOneResult(BaseMethodistError):
+    details = 'Holy shit... Maybe he created several teachers with the same name?'
