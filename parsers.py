@@ -158,15 +158,21 @@ class LessonsParser(AbstractParser):
 
         day = DaysParser().format(date)
 
-        classes = [
+        classes: List[entities.Class] = [
             database['classes'][f'id={classid}'] for classid in classids]
 
-        # If it is lesson for both groups
+        # Doubled lessons for both groups
         if groupnames[0] == '' and len(classes) == 1:
             groups = [entities.Group(
                 name=str(number), classes=classes) for number in (1, 2)]
+        # IELTS for several classes
         elif groupnames[0] == '' and len(classes) > 1:
             groups = [entities.Group(name=subject.name, classes=classes)]
+        # Math 7 and Math 10 for 11, 12 grades
+        elif len(classes) == 1 and classes[0].grade >= 11 and subject.name in ('Математика (10)', 'Математика'):
+            group__name = 'мат10' if subject.name == 'Математика (10)' else 'мат7'
+            groups = [entities.Group(name=group__name, classes=classes)]
+        # Casual subjects and profile directed
         else:
             groups = [entities.Group(name=self.try_extract_group_number(
                 groupnames[0]), classes=classes)]
