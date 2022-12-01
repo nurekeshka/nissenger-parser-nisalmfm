@@ -19,5 +19,9 @@ class MoreThanOneResult(BaseMethodistError):
     details = 'Holy shit... Maybe methodist created several teachers with the same name again?'
 
 
-class NothingFound(BasicException):
-    details = 'Database didn\'t find anything'
+class NothingFound(BaseException):
+    details = 'Database didn\'t find anything. Query input: {0}\nTable type: {1}'
+
+    def __init__(self, query__input: str, table__type: object):
+        super(NothingFound, self).__init__(
+            self.details.format(query__input, type(table__type)))
