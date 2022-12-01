@@ -14,4 +14,4 @@ class BaseMethodistError(Exception):
 
 
 class MoreThanOneResult(BaseMethodistError):
-    details = 'Holy shit... Maybe he created several teachers with the same name?'
+    details = 'Holy shit... Maybe methodist created several teachers with the same name again?'
