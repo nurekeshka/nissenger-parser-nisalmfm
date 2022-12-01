@@ -161,6 +161,7 @@ SUBJECT_TYPES = {
     "Японский прод": "FL",
     "Японский язык": "FL",
     "Немецский язык B2": "FL",
+    "Немецкий язык B2": "FL",
 }
 
 SERVER_DOMAIN = config['API']['LINK']
