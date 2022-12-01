@@ -1,3 +1,8 @@
+import configparser
+
+
+config = configparser.ConfigParser()
+config.read('settings.ini')
 
 
 TEACHER_FIXES_DICTIONARY = {
@@ -158,4 +163,4 @@ SUBJECT_TYPES = {
     "Немецский язык B2": "FL",
 }
 
-SERVER_DOMAIN = 'http://localhost:8000/'
+SERVER_DOMAIN = config['API']['LINK']
