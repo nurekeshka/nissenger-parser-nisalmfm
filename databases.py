@@ -18,20 +18,16 @@ class AbstractTable(object):
             self.data[i] = self.parser.format(self.data[i])
 
     def __getitem__(self, key: str):
-        try:
-            attribute, value = key.split('=')
-            result = [self.data[i] for i in range(
-                len(self.data)) if value == str(getattr(self.data[i], attribute))]
+        attribute, value = key.split('=')
+        result = [self.data[i] for i in range(
+            len(self.data)) if value == str(getattr(self.data[i], attribute))]
 
-            if len(result) == 1:
-                return result[0]
-            elif len(result > 1):
-                return result
-
-        except TypeError:
-            pass
-
-        return self.data[key]
+        if len(result) == 1:
+            return result[0]
+        elif len(result) > 1:
+            raise exceptions.MoreThanOneResult()
+        elif len(result) == 0:
+            raise exceptions.NothingFound(key, self)
 
     def __iter__(self):
         self.index = 0
