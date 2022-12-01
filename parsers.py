@@ -1,4 +1,5 @@
 from typing import List
+import exceptions
 import settings
 import entities
 import datetime
@@ -134,8 +135,12 @@ class LessonsParser(AbstractParser):
         kwargs = data['lesson']
         kwargs['database'] = data['database']
 
-        lessons = self.fix(**kwargs)
-        return self.to_object(lessons)
+        try:
+            lessons = self.fix(**kwargs)
+            return self.to_object(lessons)
+        except Exception as e:
+            print(e)
+            raise exceptions.InformingException(**kwargs)
 
     @classmethod
     def fix(self, database,
@@ -150,8 +155,11 @@ class LessonsParser(AbstractParser):
 
         subject: entities.Subject = database['subjects'][f'id={subjectid}']
 
-        teachers = [database['teachers']
-                    [f'id={teacherid}'] for teacherid in teacherids]
+        try:
+            teachers = [database['teachers']
+                        [f'id={teacherid}'] for teacherid in teacherids]
+        except exceptions.NothingFound:
+            teachers = [entities.Teacher(id=teacherids[0], name=teacherids[0])]
 
         classrooms = [database['classrooms']
                       [f'id={classroomid}'] for classroomid in classroomids]
