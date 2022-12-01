@@ -25,3 +25,11 @@ class NothingFound(BaseException):
     def __init__(self, query__input: str, table__type: object):
         super(NothingFound, self).__init__(
             self.details.format(query__input, type(table__type)))
+
+
+class InformingException(BaseException):
+    def __init__(self, **kwargs):
+        details = '\n'
+        details += '\n'.join(
+            map(lambda pair: f'{pair[0]}={pair[1]}', kwargs.items()))
+        super(InformingException, self).__init__(details)
