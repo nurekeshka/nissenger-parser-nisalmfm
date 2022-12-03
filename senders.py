@@ -73,7 +73,8 @@ class DatabaseSender(JsonSender):
                     "op": "fetch",
                     "needed_part": {
                         "teachers": [
-                            "short"
+                            "firstname",
+                            "lastname"
                         ],
                         "classes": [
                             "short"
