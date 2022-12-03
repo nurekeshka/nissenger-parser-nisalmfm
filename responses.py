@@ -1,6 +1,7 @@
 from rest_framework import status
 from flask import Response
 from flask import jsonify
+import requests
 
 
 class JsonResponse(Response):
@@ -40,4 +41,12 @@ class SuccessfullyUpdated(MessageJsonResponse):
     def __init__(self):
         super(SuccessfullyUpdated, self).__init__(
             text='Successfully updated timetable. Timetable waiting for being uploaded!',
+        )
+
+
+class APIError(MessageJsonResponse):
+    def __init__(self, response: requests.Response):
+        super(SuccessfullyUpdated, self).__init__(
+            text=f'Something went wrong... This an output from the server: {response.json()}',
+            status=status.HTTP_400_BAD_REQUEST,
         )
