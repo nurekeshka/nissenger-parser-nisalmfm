@@ -34,3 +34,10 @@ class ReportError(MessageJsonResponse):
             text=f'Error occurred while parsing: {exception.__class__.__name__}',
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
+
+
+class SuccessfullyUpdated(MessageJsonResponse):
+    def __init__(self):
+        super(SuccessfullyUpdated, self).__init__(
+            text='Successfully updated timetable. Timetable waiting for being uploaded!',
+        )
