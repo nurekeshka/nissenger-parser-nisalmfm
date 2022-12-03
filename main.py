@@ -30,7 +30,6 @@ def main():
     sender = senders.TimetableSender()
     sender.request(timetable=data)
     print(sender.response.status_code)
-    print(sender.response.json())
 
 
 if __name__ == '__main__':
