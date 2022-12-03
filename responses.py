@@ -50,3 +50,10 @@ class APIError(MessageJsonResponse):
             text=f'Something went wrong... This an output from the server: {response.json()}',
             status=status.HTTP_400_BAD_REQUEST,
         )
+
+
+class TimetableDidNotChange(MessageJsonResponse):
+    def __init__(self):
+        super(TimetableDidNotChange, self).__init__(
+            text='Nothing changed, timetable was not updated.',
+        )
