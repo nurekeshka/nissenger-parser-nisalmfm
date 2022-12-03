@@ -156,3 +156,4 @@ SUBJECT_TYPES = {
 }
 
 SERVER_DOMAIN = config['API']['LINK']
+DEBUG = config['FLASK'].get('DEBUG') == 'True'
