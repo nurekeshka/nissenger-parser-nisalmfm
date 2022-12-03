@@ -1,38 +1,39 @@
+from rest_framework import status
+from flask import Flask
+
+from launcher import main
+import responses
+import settings
+import requests
 import senders
-import constants
-import databases
-import parsers
-import entities
-import time
 
 
-def main():
-    sender = senders.DatabaseSender()
-    sender.request()
-
-    database = databases.TimetableDatabase()
-    database.timetable_load(sender.data)
-
-    timetable = entities.Timetable()
-
-    for subject in database['subjects']:
-        sender = senders.LessonsSender()
-        sender.request(id=subject.id, by=constants.By.SUBJECT)
-
-        for lesson__json in sender.data:
-            parser = parsers.LessonsParser()
-            lessons = parser.format(
-                data={'lesson': lesson__json, 'database': database})
-            timetable.add(lessons)
-
-    data = timetable.export()
-
-    sender = senders.TimetableSender()
-    sender.request(timetable=data)
-    print(sender.response.status_code)
+app = Flask(__name__)
 
 
-if __name__ == '__main__':
-    start = time.time()
-    main()
-    print(time.time() - start)
+@app.route('/timetable/update/', methods=['GET'])
+def launch_parser():
+    try:
+        sender = senders.Online()
+        sender.request()
+
+        if sender.response.status_code != status.HTTP_200_OK:
+            raise requests.exceptions.ConnectionError
+
+        response = main()
+    except requests.exceptions.ConnectionError:
+        return responses.APINotAccessible()
+    except Exception as exception:
+        return responses.ReportError(exception)
+
+    if response:
+        if response.status_code == status.HTTP_201_CREATED:
+            return responses.SuccessfullyUpdated()
+        else:
+            return responses.APIError()
+    else:
+        return responses.TimetableDidNotChange()
+
+
+if __name__ == "__main__":
+    app.run(debug=settings.DEBUG)
