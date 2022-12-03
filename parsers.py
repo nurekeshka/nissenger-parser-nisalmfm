@@ -44,6 +44,18 @@ class TeachersParser(DictionaryFixesParser):
     fixes = settings.TEACHER_FIXES_DICTIONARY
     id = 'id'
     name = 'short'
+    firstname = 'firstname'
+    lastname = 'lastname'
+
+    @classmethod
+    def fix(self, data: dict) -> dict:
+        id = data[self.id]
+        name = f'{data[self.lastname]} {data[self.firstname]}'
+
+        name = self.fixes[name] if name in self.fixes.keys(
+        ) else name.lower().title()
+
+        return {'id': id, 'name': name}
 
     entity: entities.Teacher = entities.Teacher
 
