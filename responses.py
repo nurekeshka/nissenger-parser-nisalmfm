@@ -26,3 +26,11 @@ class APINotAccessible(MessageJsonResponse):
             text='The main API is not accessible or offline.',
             status=status.HTTP_503_SERVICE_UNAVAILABLE,
         )
+
+
+class ReportError(MessageJsonResponse):
+    def __init__(self, exception: Exception):
+        super(ReportError, self).__init__(
+            text=f'Error occurred while parsing: {exception.__class__.__name__}',
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
