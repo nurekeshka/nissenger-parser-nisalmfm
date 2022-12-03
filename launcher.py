@@ -39,6 +39,7 @@ def main():
         resent_version.close()
 
         if timetable_is_the_same:
+            os.remove('./timetable.txt')
             return
         else:
             os.remove('./data.txt')
