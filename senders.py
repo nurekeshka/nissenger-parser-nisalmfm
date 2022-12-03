@@ -142,3 +142,7 @@ class TimetableSender(JsonSender):
 
 class Online(AbstractSender):
     url = settings.SERVER_DOMAIN + 'timetable/available/'
+
+    @classmethod
+    def format(self):
+        pass
