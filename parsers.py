@@ -156,11 +156,11 @@ class LessonsParser(AbstractParser):
 
     @classmethod
     def fix(self, database,
-            date: str, uniperiod: str,
-            starttime: str, endtime: str,
+            date: str, uniperiod: str, classroomids: List[str],
+            starttime: str, endtime: str, groupnames: List[str], teacherids: List[str],
             subjectid: str, classids: List[str],
-            groupnames: List[str], teacherids: List[str],
-            classroomids: List[str], igroupid: str = None,
+            name: str = None, eventid: str = None,
+            studentids: List[str] = None, igroupid: str = None,
             type: str = None, durationperiods: int = 1,
             cellSlices: str = None, cellOrder: int = None):
         lessons = list()
