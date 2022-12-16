@@ -97,7 +97,8 @@ class Timetable(BaseEntity):
         self.lessons: List[Lesson] = list()
 
     def add(self, lessons: List[Lesson]):
-        self.lessons.extend(lessons)
+        if lessons:
+            self.lessons.extend(lessons)
 
     def export_as_excel(self):
         wb = Workbook()
