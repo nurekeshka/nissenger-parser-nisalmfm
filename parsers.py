@@ -149,6 +149,10 @@ class LessonsParser(AbstractParser):
 
         try:
             lessons = self.fix(**kwargs)
+
+            if lessons is None:
+                return
+
             return self.to_object(lessons)
         except Exception as e:
             print(e)
@@ -163,6 +167,9 @@ class LessonsParser(AbstractParser):
             studentids: List[str] = None, igroupid: str = None,
             type: str = None, durationperiods: int = 1,
             cellSlices: str = None, cellOrder: int = None):
+        if type != 'card':
+            return
+
         lessons = list()
 
         subject: entities.Subject = database['subjects'][f'id={subjectid}']
@@ -216,7 +223,7 @@ class LessonsParser(AbstractParser):
 
         return lessons
 
-    @ classmethod
+    @classmethod
     def to_object(self, lessons: List[dict]) -> List[entities.Lesson]:
         return [entities.Lesson(subject=lesson['subject'],
                                 teacher=lesson['teacher'],
