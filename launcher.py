@@ -45,7 +45,7 @@ def main():
             os.remove('./data.txt')
             os.rename('./timetable.txt', './data.txt')
     except FileNotFoundError:
-        pass
+        os.rename('./timetable.txt', './data.txt')
 
     sender = senders.TimetableSender()
     sender.request(timetable=data)
