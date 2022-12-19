@@ -23,24 +23,26 @@ def launch_parser():
 
         response = main()
     except requests.exceptions.ConnectionError:
-        bot.send_to_admins(text='[FAIL] API is not accessible')
+        bot.send_to_admins(
+            text=f'[FAIL] API is not accessible at {settings.SERVER_DOMAIN}')
         return responses.APINotAccessible()
     except Exception as exception:
         bot.send_to_admins(
-            text=f'[FAIL] Parsing failed because of the: {exception.__class__.__name__}')
+            text=f'[FAIL] Parsing failed at {settings.SERVER_DOMAIN} because of the: {exception.__class__.__name__}')
         return responses.ReportError(exception)
 
     if response:
         if response.status_code == status.HTTP_201_CREATED:
             bot.send_to_admins(
-                text='[OK] Timetable was successfully updated')
+                text=f'[OK] Timetable was successfully updated at {settings.SERVER_DOMAIN}')
             return responses.SuccessfullyUpdated()
         else:
             bot.send_to_admins(
-                text=f'[FAIL] API responded with status code: {response.status_code}')
+                text=f'[FAIL] API at {settings.SERVER_DOMAIN} responded with status code: {response.status_code}')
             return responses.APIError()
     else:
-        bot.send_to_admins(text='[OK] Timetable was not changed')
+        bot.send_to_admins(
+            text=f'[OK] Timetable was not changed for {settings.SERVER_DOMAIN}')
         return responses.TimetableDidNotChange()
 
 
