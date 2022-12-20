@@ -195,10 +195,6 @@ class LessonsParser(AbstractParser):
         # IELTS for several classes
         elif groupnames[0] == '' and len(classes) > 1:
             groups = [entities.Group(name=subject.name, classes=classes)]
-        # Math 7 and Math 10 for 11, 12 grades
-        elif len(classes) == 1 and classes[0].grade >= 11 and subject.name in ('Математика (10)', 'Математика'):
-            group__name = 'мат10' if subject.name == 'Математика (10)' else 'мат7'
-            groups = [entities.Group(name=group__name, classes=classes)]
         # Casual subjects and profile directed
         else:
             groups = [entities.Group(name=self.try_extract_group_number(
