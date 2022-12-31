@@ -1,22 +1,30 @@
 import inspect
 from typing import List
+
 from openpyxl import Workbook
 
 
-class BaseEntity(object):
+class BaseEntity:
     def __init__(self, id: str, name: str):
-        self.id: str = id
-        self.name: str = name
+        self.id = id
+        self.name = name
 
     def __str__(self):
         return self.name
 
     def getattributes(self) -> List[str]:
-        return [attr for attr in dir(self) if not inspect.ismethod(
-            attr) and not attr.startswith('_') and not attr in ('getattributes', 'id')]
+        return [
+            attr
+            for attr in dir(self)
+            if not inspect.ismethod(attr)
+            and not attr.startswith("_")
+            and not attr in ("getattributes", "id")
+        ]
 
     def __json__(self) -> dict:
-        return {attribute: getattr(self, attribute) for attribute in self.getattributes()}
+        return {
+            attribute: getattr(self, attribute) for attribute in self.getattributes()
+        }
 
 
 class Teacher(BaseEntity):
@@ -36,23 +44,23 @@ class Classroom(BaseEntity):
 
 class Class(BaseEntity):
     def __init__(self, id: str, grade: int, letter: str):
-        self.id: str = id
-        self.grade: int = grade
-        self.letter: str = letter
+        self.id = id
+        self.grade = grade
+        self.letter = letter
 
     def __str__(self):
-        return f'{self.grade}{self.letter}'
+        return f"{self.grade}{self.letter}"
 
 
 class Period(BaseEntity):
     def __init__(self, id: str, number: int, starttime: str, endtime: str):
         self.id = id
-        self.number: int = int(number)
-        self.starttime: str = starttime
-        self.endtime: str = endtime
+        self.number = int(number)
+        self.starttime = starttime
+        self.endtime = endtime
 
     def __str__(self):
-        return f'{self.starttime} - {self.endtime}'
+        return f"{self.starttime} - {self.endtime}"
 
 
 class Day(BaseEntity):
@@ -73,11 +81,22 @@ class Group(BaseEntity):
         return f'{self.name}: [{",".join(map(str, self.classes))}]'
 
     def __json__(self) -> dict:
-        return {'name': self.name, 'classes': [_class.__json__() for _class in self.classes]}
+        return {
+            "name": self.name,
+            "classes": [_class.__json__() for _class in self.classes],
+        }
 
 
 class Lesson(BaseEntity):
-    def __init__(self, subject: Subject, teacher: Teacher, classroom: Classroom, group: Group, period: Period, day: Day):
+    def __init__(
+        self,
+        subject: Subject,
+        teacher: Teacher,
+        classroom: Classroom,
+        group: Group,
+        period: Period,
+        day: Day,
+    ):
         self.subject = subject
         self.teacher = teacher
         self.classroom = classroom
@@ -89,7 +108,10 @@ class Lesson(BaseEntity):
         return self.subject.__str__()
 
     def __json__(self) -> dict:
-        return {attribute: getattr(self, attribute).__json__() for attribute in self.getattributes()}
+        return {
+            attribute: getattr(self, attribute).__json__()
+            for attribute in self.getattributes()
+        }
 
 
 class Timetable(BaseEntity):
@@ -104,7 +126,7 @@ class Timetable(BaseEntity):
         wb = Workbook()
         ws = wb.active
 
-        ws.title = 'timetable'
+        ws.title = "timetable"
 
         for row, lesson in enumerate(self.lessons, start=1):
             for col, attribute in enumerate(lesson.getattributes(), start=1):
@@ -112,12 +134,12 @@ class Timetable(BaseEntity):
 
                 ws.cell(row=row, column=col, value=value)
 
-        wb.save('timetable.xlsx')
+        wb.save("timetable.xlsx")
 
-    def export(self, type: str = 'json') -> dict:
-        if type == 'json':
+    def export(self, type: str = "json") -> dict:
+        if type == "json":
             return [lesson.__json__() for lesson in self.lessons]
-        elif type == 'excel':
+        elif type == "excel":
             self.export_as_excel()
         else:
-            raise ValueError(f'Unknown exportation type: {type}')
+            raise ValueError(f"Unknown exportation type: {type}")

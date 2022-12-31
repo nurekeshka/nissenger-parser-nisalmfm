@@ -9,7 +9,7 @@ def get_week() -> Tuple[str]:
     firstday: date = today - timedelta(days=weekday)
     lastday: date = firstday + timedelta(days=6)
 
-    return tuple(map(lambda day: day.strftime('%Y-%m-%d'), (firstday, lastday)))
+    return tuple(map(lambda day: day.strftime("%Y-%m-%d"), (firstday, lastday)))
 
 
 def get_school_year() -> int:

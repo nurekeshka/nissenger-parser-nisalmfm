@@ -1,19 +1,18 @@
 import configparser
 
-
 config = configparser.ConfigParser()
-config.read('settings.ini')
+config.read("settings.ini")
 
 
 TEACHER_FIXES_DICTIONARY = {
-    'Ермухамбетова Меруерт Ахметжан?ызы': 'Ермухамбетова Меруерт Ахметжанқызы',
-    'ЗАЙТИН ЕРЛАН А?ЖІГІТ?ЛЫ': 'Зайтин Ерлан Ақжігітұлы',
+    "Ермухамбетова Меруерт Ахметжан?ызы": "Ермухамбетова Меруерт Ахметжанқызы",
+    "ЗАЙТИН ЕРЛАН А?ЖІГІТ?ЛЫ": "Зайтин Ерлан Ақжігітұлы",
 }
 
 
 CLASSROOM_FIXES_DICTIONARY = {
-    'МСЗ': 'Малый Спорт Зал',
-    'СЗ': 'Спорт Зал',
+    "МСЗ": "Малый Спорт Зал",
+    "СЗ": "Спорт Зал",
 }
 
 
@@ -65,13 +64,13 @@ SUBJECT_FIXES_DICTIONARY = {
 
 DAYS = (
     None,
-    'monday',
-    'tuesday',
-    'wednesday',
-    'thursday',
-    'friday',
-    'saturday',
-    'sunday',
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
 )
 
 SUBJECT_TYPES = {
@@ -155,7 +154,7 @@ SUBJECT_TYPES = {
     "Немецкий язык B2": "FL",
 }
 
-SERVER_DOMAIN = config['API']['LINK']
-DEBUG = config['FLASK'].get('DEBUG') == 'True'
-TELEGRAM_API_TOKEN = config['TELEGRAM']['TOKEN']
-TELEGRAM_ADMIN_CHAT = config['TELEGRAM']['ADMIN_CHAT']
+SERVER_DOMAIN = config["API"]["LINK"]
+DEBUG = config["FLASK"].get("DEBUG") == "True"
+TELEGRAM_API_TOKEN = config["TELEGRAM"]["TOKEN"]
+TELEGRAM_ADMIN_CHAT = config["TELEGRAM"]["ADMIN_CHAT"]

@@ -1,11 +1,11 @@
-import entities
-import parsers
-import exceptions
-
 from typing import Dict, List
 
+import entities
+import exceptions
+import parsers
 
-class AbstractTable(object):
+
+class AbstractTable:
     def __init__(self, data: dict | list, parser: parsers.AbstractParser = None):
         self.data: List[entities.BaseEntity] = data
         self.parser: parsers.AbstractParser = parser
@@ -18,9 +18,12 @@ class AbstractTable(object):
             self.data[i] = self.parser.format(self.data[i])
 
     def __getitem__(self, key: str):
-        attribute, value = key.split('=')
-        result = [self.data[i] for i in range(
-            len(self.data)) if value == str(getattr(self.data[i], attribute))]
+        attribute, value = key.split("=")
+        result = [
+            self.data[i]
+            for i in range(len(self.data))
+            if value == str(getattr(self.data[i], attribute))
+        ]
 
         if len(result) == 1:
             return result[0]
@@ -47,35 +50,32 @@ class AbstractTable(object):
 
 class TeachersTable(AbstractTable):
     def __init__(self, data: dict | list):
-        super(TeachersTable, self).__init__(
-            data=data, parser=parsers.TeachersParser)
+        super(TeachersTable, self).__init__(data=data, parser=parsers.TeachersParser)
 
 
 class SubjectsTable(AbstractTable):
     def __init__(self, data: dict | list):
-        super(SubjectsTable, self).__init__(
-            data=data, parser=parsers.SubjectsParser)
+        super(SubjectsTable, self).__init__(data=data, parser=parsers.SubjectsParser)
 
 
 class ClassroomsTable(AbstractTable):
     def __init__(self, data: dict | list):
         super(ClassroomsTable, self).__init__(
-            data=data, parser=parsers.ClassroomsParser)
+            data=data, parser=parsers.ClassroomsParser
+        )
 
 
 class ClassesTable(AbstractTable):
     def __init__(self, data: dict | list):
-        super(ClassesTable, self).__init__(
-            data=data, parser=parsers.ClassesParser)
+        super(ClassesTable, self).__init__(data=data, parser=parsers.ClassesParser)
 
 
 class PeriodsTable(AbstractTable):
     def __init__(self, data: dict | list):
-        super(PeriodsTable, self).__init__(
-            data=data, parser=parsers.PeriodParser)
+        super(PeriodsTable, self).__init__(data=data, parser=parsers.PeriodParser)
 
 
-class AbstractDatabase(object):
+class AbstractDatabase:
     def __init__(self):
         self.database: dict = dict()
 
@@ -105,18 +105,19 @@ class AbstractDatabase(object):
             raise StopIteration
 
     def __str__(self):
-        return '\n'.join(map(lambda table: f'{table[0]}: {table[1]}', self.database.items()))
+        return "\n".join(
+            map(lambda table: f"{table[0]}: {table[1]}", self.database.items())
+        )
 
 
 class TimetableDatabase(AbstractDatabase):
     tables: Dict[str, AbstractTable] = {
-        'teachers': TeachersTable,
-        'subjects': SubjectsTable,
-        'classrooms': ClassroomsTable,
-        'classes': ClassesTable,
-        'periods': PeriodsTable,
+        "teachers": TeachersTable,
+        "subjects": SubjectsTable,
+        "classrooms": ClassroomsTable,
+        "classes": ClassesTable,
+        "periods": PeriodsTable,
     }
 
     def timetable_load(self, data: Dict[str, dict]):
-        self.load({name: table(data[name])
-                  for name, table in self.tables.items()})
+        self.load({name: table(data[name]) for name, table in self.tables.items()})

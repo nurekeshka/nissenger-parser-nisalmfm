@@ -1,9 +1,10 @@
-import senders
+import os
+
 import constants
 import databases
-import parsers
 import entities
-import os
+import parsers
+import senders
 
 
 def main():
@@ -15,23 +16,22 @@ def main():
 
     timetable = entities.Timetable()
 
-    for subject in database['subjects']:
+    for subject in database["subjects"]:
         sender = senders.LessonsSender()
         sender.request(id=subject.id, by=constants.By.SUBJECT)
 
         for lesson__json in sender.data:
             parser = parsers.LessonsParser()
-            lessons = parser.format(
-                data={'lesson': lesson__json, 'database': database})
+            lessons = parser.format(data={"lesson": lesson__json, "database": database})
             timetable.add(lessons)
 
     data = timetable.export()
-    with open('timetable.txt', 'w', encoding='utf-8') as file:
+    with open("timetable.txt", "w", encoding="utf-8") as file:
         print(data, file=file)
 
     try:
-        current_version = open('data.txt', 'r', encoding='utf-8')
-        resent_version = open('timetable.txt', 'r', encoding='utf-8')
+        current_version = open("data.txt", "r", encoding="utf-8")
+        resent_version = open("timetable.txt", "r", encoding="utf-8")
 
         timetable_is_the_same = current_version.read() == resent_version.read()
 
@@ -39,13 +39,13 @@ def main():
         resent_version.close()
 
         if timetable_is_the_same:
-            os.remove('./timetable.txt')
+            os.remove("./timetable.txt")
             return
         else:
-            os.remove('./data.txt')
-            os.rename('./timetable.txt', './data.txt')
+            os.remove("./data.txt")
+            os.rename("./timetable.txt", "./data.txt")
     except FileNotFoundError:
-        os.rename('./timetable.txt', './data.txt')
+        os.rename("./timetable.txt", "./data.txt")
 
     sender = senders.TimetableSender()
     sender.request(timetable=data)
@@ -53,5 +53,5 @@ def main():
     return sender.response
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

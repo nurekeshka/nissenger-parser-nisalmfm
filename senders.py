@@ -1,12 +1,14 @@
-from constants import Links as links
-from telebot import TeleBot
 from typing import Dict
-import utils
+
 import requests
+from telebot import TeleBot
+
 import settings
+import utils
+from constants import Links as links
 
 
-class AbstractSender(object):
+class AbstractSender:
     url: str = None
     method: requests.get = requests.get
 
@@ -31,8 +33,7 @@ class JsonSender(AbstractSender):
     @classmethod
     def request(self, *args, **kwargs):
         self.response: requests.Response = self.method(
-            url=self.url,
-            json=self.json(*args, **kwargs)
+            url=self.url, json=self.json(*args, **kwargs)
         )
 
         self.format()
@@ -46,8 +47,7 @@ class FormDataSender(AbstractSender):
     @classmethod
     def request(self, *args, **kwargs):
         self.response: requests.Response = self.method(
-            url=self.url,
-            data=self.data(*args, **kwargs)
+            url=self.url, data=self.data(*args, **kwargs)
         )
 
         self.format()
@@ -61,7 +61,8 @@ class DatabaseSender(JsonSender):
     def format(self):
         data = self.response.json()
         self.data: Dict[str, dict] = {
-            table['id']: table['data_rows'] for table in data['r']['tables']}
+            table["id"]: table["data_rows"] for table in data["r"]["tables"]
+        }
 
     @classmethod
     def json(self) -> dict:
@@ -73,29 +74,16 @@ class DatabaseSender(JsonSender):
                 {
                     "op": "fetch",
                     "needed_part": {
-                        "teachers": [
-                            "firstname",
-                            "lastname"
-                        ],
-                        "classes": [
-                            "short"
-                        ],
-                        "classrooms": [
-                            "short"
-                        ],
-                        "subjects": [
-                            "name"
-                        ],
-                        "periods": [
-                            "period",
-                            "starttime",
-                            "endtime"
-                        ]
+                        "teachers": ["firstname", "lastname"],
+                        "classes": ["short"],
+                        "classrooms": ["short"],
+                        "subjects": ["name"],
+                        "periods": ["period", "starttime", "endtime"],
                     },
-                    "needed_combos": {}
-                }
+                    "needed_combos": {},
+                },
             ],
-            "__gsh": "00000000"
+            "__gsh": "00000000",
         }
 
 
@@ -106,7 +94,7 @@ class LessonsSender(JsonSender):
     @classmethod
     def format(self):
         data = self.response.json()
-        self.data = data['r']['ttitems']
+        self.data = data["r"]["ttitems"]
 
     @classmethod
     def json(self, *args, **kwargs) -> dict:
@@ -119,22 +107,22 @@ class LessonsSender(JsonSender):
                     "year": utils.get_school_year(),
                     "datefrom": firstday,
                     "dateto": lastday,
-                    "table": kwargs['by'],
-                    "id": kwargs['id'],
-                }
+                    "table": kwargs["by"],
+                    "id": kwargs["id"],
+                },
             ],
-            "__gsh": "00000000"
+            "__gsh": "00000000",
         }
 
 
 class TimetableSender(JsonSender):
     id = 1
-    url = settings.SERVER_DOMAIN + f'timetable/upload?school={id}'
+    url = settings.SERVER_DOMAIN + f"timetable/upload?school={id}"
     method = requests.post
 
     @classmethod
     def json(self, *args, **kwargs) -> dict:
-        return {'timetable': kwargs['timetable']}
+        return {"timetable": kwargs["timetable"]}
 
     @classmethod
     def format(self):
@@ -142,7 +130,7 @@ class TimetableSender(JsonSender):
 
 
 class Online(AbstractSender):
-    url = settings.SERVER_DOMAIN + 'timetable/available/'
+    url = settings.SERVER_DOMAIN + "timetable/available/"
 
     @classmethod
     def format(self):
@@ -151,7 +139,7 @@ class Online(AbstractSender):
 
 class TelegramBot(TeleBot):
     token = settings.TELEGRAM_API_TOKEN
-    parse_mode = 'html'
+    parse_mode = "html"
     admin_chat = settings.TELEGRAM_ADMIN_CHAT
 
     def __init__(self):
