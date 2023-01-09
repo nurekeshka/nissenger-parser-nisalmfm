@@ -1,6 +1,5 @@
 import requests
 from flask import Flask
-from rest_framework import status
 
 import responses
 import senders
@@ -17,7 +16,7 @@ def launch_parser():
         sender = senders.Online()
         sender.request()
 
-        if sender.response.status_code != status.HTTP_200_OK:
+        if sender.response.status_code != 200:
             raise requests.exceptions.ConnectionError
 
         response = main()
@@ -33,7 +32,7 @@ def launch_parser():
         return responses.ReportError(exception)
 
     if response:
-        if response.status_code == status.HTTP_201_CREATED:
+        if response.status_code == 201:
             bot.send_to_admins(
                 text=f"[OK] Timetable was successfully updated at {settings.SERVER_DOMAIN}"
             )

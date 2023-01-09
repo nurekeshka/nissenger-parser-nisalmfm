@@ -1,6 +1,5 @@
 import requests
 from flask import Response, jsonify
-from rest_framework import status
 
 
 class JsonResponse(Response):
@@ -24,7 +23,7 @@ class APINotAccessible(MessageJsonResponse):
     def __init__(self):
         super(APINotAccessible, self).__init__(
             text="The main API is not accessible or offline.",
-            status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            status=503,
         )
 
 
@@ -32,7 +31,7 @@ class ReportError(MessageJsonResponse):
     def __init__(self, exception: Exception):
         super(ReportError, self).__init__(
             text=f"Error occurred while parsing: {exception.__class__.__name__}",
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status=500,
         )
 
 
@@ -47,7 +46,7 @@ class APIError(MessageJsonResponse):
     def __init__(self, response: requests.Response):
         super(SuccessfullyUpdated, self).__init__(
             text=f"Something went wrong... This an output from the server: {response.json()}",
-            status=status.HTTP_400_BAD_REQUEST,
+            status=400,
         )
 
 
